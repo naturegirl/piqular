@@ -2,20 +2,16 @@ package com.piqular;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFile;
-import com.dropbox.sync.android.DbxFileInfo;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
-import com.dropbox.sync.android.DbxException.Unauthorized;
 
 
 public class DbManager {
