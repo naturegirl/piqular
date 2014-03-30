@@ -1,0 +1,5 @@
+	<article class "quote">
+			<blockquote>#QUOTE#
+			<cite>#CITE#</cite>
+			</blockquote>
+	</article>

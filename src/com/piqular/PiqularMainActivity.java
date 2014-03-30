@@ -14,13 +14,15 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.piqular.dropbox.DbManager;
+import com.piqular.website.SiteManager;
 
 
 public class PiqularMainActivity extends ActionBarActivity {
 
 	private DbManager dbManager;
-	private String photoPaths[];
-	private int syncStatus;
+	private String photoPaths[];		// paths to the local photo files
+	private String[] fullUrls;			// paths to the final public urls
+	private int syncStatus;				// status of dropbox syncing
 	
 	private static final int SYNC_NOT_STARTED = 0;
 	private static final int SYNC_STARTED = 1;
@@ -86,6 +88,7 @@ public class PiqularMainActivity extends ActionBarActivity {
     
     private void onClickStartPhotoSelect() {
     	Intent intent = new Intent(this, PhotoSelectActivity.class);
+    	intent.putExtra("key","value");
     	startActivityForResult(intent, SELECT_PHOTO_REQUEST);
     }
     
@@ -120,18 +123,23 @@ public class PiqularMainActivity extends ActionBarActivity {
         	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
         	return;    		
     	}
-    	String[] fullUrls = new String[photoPaths.length];		// full public URLs of images
+    	
+    	fullUrls = new String[photoPaths.length];		// full public URLs of images
     	String uid = dbManager.getUid();
     	String prefix = "http://dl.dropboxusercontent.com/u/" + uid + "/" + DbManager.AppDir;
     	for (int i = 0; i < photoPaths.length; ++i) {
     		fullUrls[i] = prefix + "img" + Integer.toString(i+1) + ".jpg";
     		Log.w("swifflet", fullUrls[i]);
     	}
+    	
+    	Intent intent = new Intent(this, SiteCreateActivity.class);
+    	intent.putExtra("full_urls", fullUrls);
+    	startActivity(intent);
     }
     
     private void testing() {
-    	String link = "http://tinyurl.com/api-create.php?url=http://scripting.com/";
-    	UrlShortener.getInstance(this).shorten(link);
+    	//String link = "http://tinyurl.com/api-create.php?url=http://scripting.com/";
+    	//UrlShortener.getInstance(this).shorten(link);
     }
     
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

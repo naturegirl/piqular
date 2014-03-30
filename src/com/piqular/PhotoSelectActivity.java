@@ -57,6 +57,11 @@ public class PhotoSelectActivity extends Activity {
         initImageLoader();
 		init();
 
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+		    String value = extras.getString("key");
+		    Log.w("swifflet", value);
+		}
 	}	
 	
     private void initImageLoader() {

@@ -1,0 +1,4 @@
+	<article class="photo">                       
+		<img src="#IMG#" alt="" />
+		<section class="details">#DETAILS#</section>
+	</article>

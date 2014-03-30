@@ -38,7 +38,16 @@
 	            android:name="android.support.PARENT_ACTIVITY"
 	            android:value="com.piqular.PiqularMainActivity" />
 	    </activity>
+	    <activity
+	        android:name="com.piqular.SiteCreateActivity"
+	        android:label="Create website"
+	        android:parentActivityName="com.piqular.PiqularMainActivity" >
+	        <meta-data
+	            android:name="android.support.PARENT_ACTIVITY"
+	            android:value="com.piqular.PiqularMainActivity" />
+	    </activity>
 	    
+	    	    
         <activity android:name="com.dropbox.sync.android.DbxAuthActivity" />
 		<activity
 		  android:name="com.dropbox.client2.android.AuthActivity"

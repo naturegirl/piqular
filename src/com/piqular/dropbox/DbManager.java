@@ -17,7 +17,7 @@ import com.piqular.PiqularMainActivity;
 
 public class DbManager {
 	
-	private static DbManager manager = null;
+	private static DbManager instance = null;
 	
     private final static String appKey = "g9u2511s94axpyh";
     private final static String appSecret = "rdqxnyirkc2rttp";
@@ -38,10 +38,18 @@ public class DbManager {
 	}
 	
 	public static DbManager getInstance(Activity act, Context ctx) {
-		if (manager == null) {
-			manager = new DbManager(act, ctx);
+		if (instance == null) {
+			instance = new DbManager(act, ctx);
 		}
-		return manager;
+		return instance;
+	}
+	// call only when the other one with act/ctx has been called before
+	public static DbManager getInstance() {
+		if (instance == null) {
+			Log.e("swifflet", "call getInstance(activity, context) first instead!");
+			throw new RuntimeException("called wrong getInstance() function");
+		}
+		return instance;
 	}
 	
 	public void linkToDropbox() {
@@ -99,7 +107,6 @@ public class DbManager {
 				String filename = "img"+cnt+".jpg";
 				DbxPath dbPath = new DbxPath(DbxPath.ROOT, directory+filename);
 				DbxFile dbFile;
-				
 				File imgFile = new File(imgPath);
 				
 				if (dbxFs.exists(dbPath))
@@ -112,6 +119,54 @@ public class DbManager {
 			}
 		} catch (DbxException e) { e.printStackTrace();
 		} catch (IOException e) { e.printStackTrace(); }
+	}
+	
+	/* write a textfile to dropbox
+	 * assumes that dbxFs has been called.
+	 * @filecontent: the whole file
+	 * @filename: the target filename
+	 */
+	public void writeFile(String filecontent, String filename) {
+		if (dbxFs == null) {
+			Log.e("swifflet", "dbxFs shouldn't be null");
+			throw new RuntimeException("dbxFs is null in writeFile()");
+		}
+		DbxPath dbPath = new DbxPath(DbxPath.ROOT, directory+filename);
+		try {
+			DbxFile dbFile;
+			if (dbxFs.exists(dbPath))
+				dbFile = dbxFs.open(dbPath);
+			else
+				dbFile = dbxFs.create(dbPath);
+			dbFile.writeString(filecontent);
+			dbFile.close();
+		} catch (DbxException e) { e.printStackTrace();
+		} catch (IOException e) { e.printStackTrace(); }
+	}
+	
+	/* returns the DbxFile to write outside DbManager.
+	 * Use only when really necessary, and don't forget to close inside calling function!
+	 * also dbxFs can't be null!
+	 * @filename: of the file. Will overwrite any existing files
+	 */
+	public DbxFile getFileToWrite(String filename) {
+		if (dbxFs == null) {
+			Log.e("swifflet", "dbxFs shouldn't be null");
+			throw new RuntimeException("dbxFs is null in writeFile()");
+		}
+		DbxPath dbPath = new DbxPath(DbxPath.ROOT, directory+filename);
+		try {
+			DbxFile dbFile;
+			if (dbxFs.exists(dbPath))
+				dbFile = dbxFs.open(dbPath);
+			else
+				dbFile = dbxFs.create(dbPath);
+			return dbFile;
+		} catch (DbxException e) {
+			Log.e("swifflet", "error creating DbxFile");
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public void testing() {

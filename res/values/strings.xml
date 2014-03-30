@@ -4,5 +4,13 @@
     <string name="app_name">Piqular</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    
+    <string-array name="quote_options">
+        <item>No Quotes</item>
+        <item>Food</item>
+        <item>Friends and Family</item>
+        <item>Productivity</item>
+        <item>Vacations</item>
+    </string-array>
 
 </resources>
