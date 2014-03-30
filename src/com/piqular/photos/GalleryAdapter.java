@@ -1,4 +1,4 @@
-package com.piqular;
+package com.piqular.photos;
 
 import java.util.ArrayList;
 
@@ -10,6 +10,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.piqular.R;
+import com.piqular.R.drawable;
+import com.piqular.R.id;
+import com.piqular.R.layout;
 
 public class GalleryAdapter extends BaseAdapter {
 

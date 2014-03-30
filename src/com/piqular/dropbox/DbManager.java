@@ -1,4 +1,4 @@
-package com.piqular;
+package com.piqular.dropbox;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +12,7 @@ import com.dropbox.sync.android.DbxException;
 import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
+import com.piqular.PiqularMainActivity;
 
 
 public class DbManager {
@@ -21,12 +22,14 @@ public class DbManager {
     private final static String appKey = "g9u2511s94axpyh";
     private final static String appSecret = "rdqxnyirkc2rttp";
     
-    private final static String directory = "Public/Piqular/";
+    public final static String AppDir = "Piqular/";
+    private final static String directory = "Public/"+AppDir;
     
     private Context context;
     private Activity activity;
 	
     private DbxAccountManager mDbxAcctMgr;
+    private DbxFileSystem dbxFs;
     
 	private DbManager(Activity act, Context ctx) {
 		this.context = ctx;
@@ -51,10 +54,46 @@ public class DbManager {
 		return mDbxAcctMgr.hasLinkedAccount();
 	}
 	
+	public String getUid() {
+		if (isLinked())
+			return mDbxAcctMgr.getLinkedAccount().getUserId();
+		else
+			return null;
+	}
+	
+	/* sets up dbxFs, called from the activity after linking the account succeeded */
+	public void setupFs() {
+		if (dbxFs == null) {
+			try {
+				dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+				dbxFs.addSyncStatusListener(new DbxFileSystem.SyncStatusListener() {
+				    @Override
+				    public void onSyncStatusChange(DbxFileSystem fs) {
+				    	Log.w("swifflet", "sync status change");
+				    }
+				});
+			} catch (DbxException e) { e.printStackTrace(); }
+		}
+	}
+	
+	/* make sure to call setupFs before */
 	public void syncFiles(String photoPaths[]) {
-		// move to init?
 		try {
-			DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+			if (dbxFs == null) {
+				dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
+				dbxFs.addSyncStatusListener(new DbxFileSystem.SyncStatusListener() {
+				    @Override
+				    public void onSyncStatusChange(DbxFileSystem fs) {
+				    	Log.w("swifflet", "sync status change");
+				    	/*
+				        DbxSyncStatus fsStatus = fs.getSyncStatus();
+				        if (fsStatus.anyInProgress()) {
+				            // Show syncing indictor
+				        }
+				        */				    	
+				    }
+				});				
+			}
 			int cnt = 1;		
 			for (String imgPath : photoPaths) {
 				String filename = "img"+cnt+".jpg";

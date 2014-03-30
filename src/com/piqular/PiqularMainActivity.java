@@ -1,5 +1,6 @@
 package com.piqular;
 
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,14 +13,22 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.piqular.dropbox.DbManager;
+
 
 public class PiqularMainActivity extends ActionBarActivity {
 
 	private DbManager dbManager;
 	private String photoPaths[];
+	private int syncStatus;
+	
+	private static final int SYNC_NOT_STARTED = 0;
+	private static final int SYNC_STARTED = 1;
+	private static final int SYNC_DONE = 2;		// TODO: set asynchronuously when sync done
 	
 	public static int LINK_DB_REQUEST = 100;
 	private static int SELECT_PHOTO_REQUEST = 200;
+	
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -56,6 +65,13 @@ public class PiqularMainActivity extends ActionBarActivity {
             }        	
         });
         
+        createSiteButton.setOnClickListener(new OnClickListener() {
+        	public void onClick(View v) {
+        		onClickCreateWebsite();
+        	}
+        });
+        
+        syncStatus = SYNC_NOT_STARTED;
 		dbManager = DbManager.getInstance(this, getApplicationContext());
 	}
 	
@@ -85,12 +101,38 @@ public class PiqularMainActivity extends ActionBarActivity {
         	return;
     	}
     	dbManager.syncFiles(photoPaths);
+    	syncStatus = SYNC_STARTED;
+    }
+    
+    private void onClickCreateWebsite() {
+    	if (!dbManager.isLinked()) {
+    		String msg = "please link with dropbox first.";
+        	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        	return;
+    	}
+    	else if (photoPaths == null || photoPaths.length == 0) {
+    		String msg = "please select photos first.";
+        	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        	return;
+    	}
+    	else if (syncStatus == SYNC_NOT_STARTED) {
+    		String msg = "please sync with dropbox first.";
+        	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        	return;    		
+    	}
+    	String[] fullUrls = new String[photoPaths.length];		// full public URLs of images
+    	String uid = dbManager.getUid();
+    	String prefix = "http://dl.dropboxusercontent.com/u/" + uid + "/" + DbManager.AppDir;
+    	for (int i = 0; i < photoPaths.length; ++i) {
+    		fullUrls[i] = prefix + "img" + Integer.toString(i+1) + ".jpg";
+    		Log.w("swifflet", fullUrls[i]);
+    	}
     }
     
     private void testing() {
-    	dbManager.testing();
+    	String link = "http://tinyurl.com/api-create.php?url=http://scripting.com/";
+    	UrlShortener.getInstance(this).shorten(link);
     }
-    
     
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);

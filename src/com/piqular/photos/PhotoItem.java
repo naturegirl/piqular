@@ -1,4 +1,4 @@
-package com.piqular;
+package com.piqular.photos;
 
 public class PhotoItem {
 
