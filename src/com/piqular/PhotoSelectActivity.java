@@ -89,7 +89,6 @@ public class PhotoSelectActivity extends Activity {
 		
 		gridGallery.setAdapter(adapter);
 
-
 		new Thread() {
 			public void run() {
 				Looper.prepare();

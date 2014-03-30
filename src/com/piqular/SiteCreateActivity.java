@@ -1,5 +1,6 @@
 package com.piqular;
 
+import com.piqular.dropbox.DbManager;
 import com.piqular.website.SiteManager;
 
 import android.app.Activity;
@@ -84,7 +85,11 @@ public class SiteCreateActivity extends Activity {
 				//site manager
 		    	SiteManager sm = SiteManager.getInstance(this, getApplicationContext(), title, desc, quoteType, fullUrls);
 		    	sm.generate();
-				
+
+		    	String uid = DbManager.getInstance().getUid();
+		    	String longUrl = "http://dl.dropboxusercontent.com/u/" + uid + "/" + DbManager.AppDir + "1.html";
+		    	UrlShortener.getInstance(this).shorten(longUrl);
+		    	
 				Log.w("attributes", title);
 				Log.w("attributes", desc);
 			}

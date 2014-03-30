@@ -8,18 +8,19 @@ import org.apache.http.ParseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 
-
 import android.app.Activity;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
 
 public class UrlShortener {
 	
 	private static UrlShortener instance = null;
 	private static final String prefix = "http://tinyurl.com/api-create.php?url=";
 	
-	private Activity activity;
+	private Activity activity;		// must be SiteCreateActivity
 	
 	private UrlShortener(Activity act) {
 		activity = act;
@@ -60,8 +61,10 @@ public class UrlShortener {
             if (result != null) {
             	HttpEntity entity = result.getEntity();
             	try {
-					String responseString = EntityUtils.toString(entity, "UTF-8");
-					Log.w("swifflet", responseString);
+					String shortUrl = EntityUtils.toString(entity, "UTF-8");
+					Log.w("swifflet", shortUrl);
+			    	EditText et = (EditText) activity.findViewById(R.id.tinyurl);
+			    	et.setText(shortUrl);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
