@@ -39,6 +39,7 @@
 	        android:id="@+id/gallery_ok_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
+	        android:background="@drawable/blue_button"
 	        android:text="OK" />
         
         </LinearLayout>

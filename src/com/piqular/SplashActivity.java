@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 public class SplashActivity extends Activity {
-	private long splashDelay = 5000; //5 seconds
+	private long splashDelay = 4000; //4 seconds
 	
     /** Called when the activity is first created. */
     @Override

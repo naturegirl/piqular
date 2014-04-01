@@ -6,6 +6,7 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
@@ -93,12 +94,6 @@ public class DbManager {
 				    @Override
 				    public void onSyncStatusChange(DbxFileSystem fs) {
 				    	Log.w("swifflet", "sync status change");
-				    	/*
-				        DbxSyncStatus fsStatus = fs.getSyncStatus();
-				        if (fsStatus.anyInProgress()) {
-				            // Show syncing indictor
-				        }
-				        */				    	
 				    }
 				});				
 			}

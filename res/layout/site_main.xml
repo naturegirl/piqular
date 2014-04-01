@@ -46,7 +46,7 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Layout Type:"
+            android:text="Themes:"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 		
 		<RadioGroup 
@@ -81,6 +81,7 @@
             android:layout_height="wrap_content" />
 
         <Button
+            style="@style/buttonStyle"
             android:id="@+id/gen_website"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -92,6 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:editable="false"
+            android:gravity="center"
             android:textIsSelectable="true"
             android:ems="10" />
         

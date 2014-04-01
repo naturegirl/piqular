@@ -1,6 +1,6 @@
 # Piqular
 
-**Piqular** is an app that allows you to create beautiful photo websites within a few minutes right from your cell phone
+**Piqular** is an app that allows you to create beautiful photo websites within a few minutes right from your cell phone. It was born at [HackPrinceton](http://hackprincetons2014.challengepost.com/submissions/22144-piqular) after a spring break trip to Costa Rica and the motivation to work with the dropbox API. Project website: http://swifflet.com/piqular/
 
 ## Usage
 
