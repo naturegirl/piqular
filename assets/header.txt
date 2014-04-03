@@ -6,6 +6,7 @@
 		
 		<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Bitter:400,700,400italic' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=The+Girl+Next+Door' rel='stylesheet' type='text/css'>
 		<link href="mystyle.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
@@ -14,8 +15,8 @@
 
 	<div class = "header">
 		<div class="title">
-			<a href="/"><h1>#INSERT TITLE#</h1></a>
+			<a href="#HOME"><h1>#INSERT TITLE#</h1></a>
 		</div>
 		
-		<div class="description"></div>	
+		<div class="description">#DESCRIPTION#</div>	
 	</div>
