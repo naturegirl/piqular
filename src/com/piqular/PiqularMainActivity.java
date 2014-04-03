@@ -35,19 +35,28 @@ public class PiqularMainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
-		Button connectButton = (Button) findViewById(R.id.connect_db_button);
+		
+		View connectButtonView = findViewById(R.id.connect_db_button);
+		Button connectButton = (Button) connectButtonView;
         Button selectPicsButton = (Button) findViewById(R.id.select_photos_button);
         Button syncButton = (Button) findViewById(R.id.sync_db_button);
         Button createSiteButton = (Button) findViewById(R.id.create_website_button);
         
         Button testButton = (Button) findViewById(R.id.test_button);
         
-        connectButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-            	onClickLinkToDropbox();
-            }
+        syncStatus = SYNC_NOT_STARTED;
+		dbManager = DbManager.getInstance(this, getApplicationContext());
+        
+        if (dbManager.isLinked()) {
+        	connectButtonView.setVisibility(View.GONE);
+        }
+        else {
+	        connectButton.setOnClickListener(new OnClickListener() {
+	            public void onClick(View v) {
+	            	onClickLinkToDropbox();
+	            }
         });
+        }
         
         selectPicsButton.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -73,8 +82,7 @@ public class PiqularMainActivity extends ActionBarActivity {
         	}
         });
         
-        syncStatus = SYNC_NOT_STARTED;
-		dbManager = DbManager.getInstance(this, getApplicationContext());
+
 	}
 	
     private void onClickLinkToDropbox() {

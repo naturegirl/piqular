@@ -16,6 +16,12 @@ Icon
 .Trashes
 
 
+## EMACS ##
+*~
+[#]*[#]
+.\#*
+
+
 ## ECLIPSE ##
 
 *.pydevproject
