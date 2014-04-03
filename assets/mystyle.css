@@ -52,6 +52,23 @@ hr{
 
 ol{ list-style:decimal }
 
+.piqular {
+font-family: 'The Girl Next Door', cursive;
+font-weight: bold; 
+font-size:larger;
+}
+
+.footer {
+	text-align: center;
+	padding-bottom:30px;
+}
+
+.footer img {
+    height: 14px;
+    width: auto;
+		vertical-align:text-top;
+}
+
 article {
 	display:block;
 	margin-top: 3em;
@@ -212,6 +229,3 @@ blockquote cite:before {
 	text-decoration:underline;
 	color:#57565e;
 }
-
-
- 

@@ -1,11 +1,7 @@
   
-	  <section class="pagination">
-	      <div class="prev"><a href="#PREV#.html">Prev</a></div>
-		 <a class="jump" href="#PRECURR#.html">#PRECURR#</a>
-	      <span class="current">#CURRENT#</span>
-	      <a class="jump" href="#POSTCURR#.html">#POSTCURR#</a>
-	      <div class="next"><a href="#NEXT#.html">Next</a></div>
-	  </section>
+	<section class="footer">
+	generated using <a href="http://www.swifflet.com/piqular"><span class="piqular">piqular</span></a> by <a href="http://www.swifflet.com"><img src="http://swifflet.com/logos/swifflet_XS.jpg" height = "2"></a>
+ 	</section>
 
 		</body>
 	</html>
