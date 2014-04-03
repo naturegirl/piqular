@@ -168,6 +168,8 @@ public class PiqularMainActivity extends ActionBarActivity {
 		if (requestCode == LINK_DB_REQUEST && resultCode == Activity.RESULT_OK) {
 	    	Toast.makeText(getApplicationContext(), "linked with dropbox!", 
 	                Toast.LENGTH_SHORT).show();
+	    	finish();
+	    	startActivity(getIntent());
 		}
 	}
 	
