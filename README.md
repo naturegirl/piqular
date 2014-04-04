@@ -4,7 +4,8 @@
 
 ## Usage
 
-Piqular requires a Dropbox account with a Public/ folder (newer accounts don't have it anymore).
+Piqular requires a Dropbox account.
+
 Set up your Android dev environment in Eclipse and import the project.
 
 To fix the compatibility issues, you additionally need to import appcompat-v7. Go to Import -> Import Existing Android Project. Go to your android SDK directory and select extras/android/support/v7/appcompat as the project. Finish the project import. You should have another project android-support-v7-appcompat now.

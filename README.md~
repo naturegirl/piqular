@@ -9,16 +9,16 @@ Set up your Android dev environment in Eclipse and import the project.
 
 To fix the compatibility issues, you additionally need to import appcompat-v7. Go to Import -> Import Existing Android Project. Go to your android SDK directory and select extras/android/support/v7/appcompat as the project. Finish the project import. You should have another project android-support-v7-appcompat now.
 
-Now go to Project Properties -> Android and and add android-support-v7-appcompat as a Library ("is Library" doesn't have to be checked). You might have to delete existing broken references.
+Now go to Piqular: "Project Properties" -> "Android" and add android-support-v7-appcompat as a Library ("is Library" doesn't have to be checked). It might already be there, then you don't need to add anything, or there is an existing broken reference which you have to delete.
 
-I'm not sure why Eclipse now always creates these compatibility issues with Android projects, but hopefully you were able to fix them.
+I'm not sure why Eclipse now always creates these compatibility issues with Android projects, but hopefully this fixes it.
 
 Let me know if there are any other issues.
 
 ## License
 
 ``` text
-Copyright 2013-2014 Jennifer Guo
+Copyright 2013-2014 Jennifer Guo and Nikhila Albert
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this
 software and associated documentation files (the "Software"), to deal in the 
