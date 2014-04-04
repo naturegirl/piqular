@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -18,6 +18,8 @@
     </style>
     <style name="buttonStyle">
         <item name="android:layout_marginLeft">10dip</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@drawable/blue_button</item>
         <item name="android:layout_marginRight">10dip</item>
         <item name="android:layout_marginTop">10dip</item>
         <item name="android:layout_marginBottom">10dip</item>

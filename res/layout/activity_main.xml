@@ -17,7 +17,6 @@
             android:id="@+id/connect_db_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/blue_button"
             android:text="Connect with Dropbox" />
 
 	    <Button
@@ -25,7 +24,6 @@
 	        android:id="@+id/select_photos_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:background="@drawable/blue_button"
 	        android:text="Select photos" />
 
 	    <Button
@@ -33,7 +31,6 @@
 	        android:id="@+id/sync_db_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:background="@drawable/blue_button"
 	        android:text="Sync with Dropbox" />
 
 	    <Button
@@ -41,7 +38,6 @@
 	        android:id="@+id/create_website_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:background="@drawable/blue_button"
 	        android:text="Create website" />
 	    	    	    	    	    	    	        
 	    <Button
@@ -50,7 +46,6 @@
 	        android:id="@+id/test_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:background="@drawable/blue_button"
 	        android:text="Test me" />
 
 	</LinearLayout>

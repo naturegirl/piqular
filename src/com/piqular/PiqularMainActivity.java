@@ -3,6 +3,7 @@ package com.piqular;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -14,7 +15,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.piqular.dropbox.DbManager;
-import com.piqular.website.SiteManager;
 
 
 public class PiqularMainActivity extends ActionBarActivity {
@@ -95,6 +95,11 @@ public class PiqularMainActivity extends ActionBarActivity {
     }
     
     private void onClickStartPhotoSelect() {
+    	if (!dbManager.isLinked()) {
+    		String msg = "please link with dropbox first.";
+        	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+        	return;    		
+    	}
     	Intent intent = new Intent(this, PhotoSelectActivity.class);
     	intent.putExtra("key","value");
     	startActivityForResult(intent, SELECT_PHOTO_REQUEST);
