@@ -16,12 +16,21 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    <style name="buttonStyle">
-        <item name="android:layout_marginLeft">10dip</item>
+    <style name="blueButton">
+        <item name="android:layout_marginLeft">60dip</item>
+        <item name="android:layout_marginRight">60dip</item>
+        <item name="android:layout_marginTop">15dip</item>
+        <item name="android:layout_marginBottom">15dip</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:background">@drawable/blue_button</item>
-        <item name="android:layout_marginRight">10dip</item>
-        <item name="android:layout_marginTop">10dip</item>
-        <item name="android:layout_marginBottom">10dip</item>
     </style>
+    <style name="purpleButton">
+        <item name="android:layout_marginLeft">60dip</item>
+        <item name="android:layout_marginRight">60dip</item>
+        <item name="android:layout_marginTop">15dip</item>
+        <item name="android:layout_marginBottom">15dip</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@drawable/purple_button</item>
+    </style>
+    
 </resources>

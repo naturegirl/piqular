@@ -2,6 +2,7 @@ package com.piqular;
 
 import com.piqular.dropbox.DbManager;
 import com.piqular.website.SiteManager;
+import com.piqular.website.UrlShortener;
 
 import android.app.Activity;
 import android.content.Context;

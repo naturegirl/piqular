@@ -3,7 +3,6 @@ package com.piqular;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -12,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.piqular.dropbox.DbManager;
@@ -48,7 +48,7 @@ public class PiqularMainActivity extends ActionBarActivity {
 		dbManager = DbManager.getInstance(this, getApplicationContext());
         
         if (dbManager.isLinked()) {
-        	connectButtonView.setVisibility(View.GONE);
+        	connectButtonView.setVisibility(View.INVISIBLE);
         }
         else {
 	        connectButton.setOnClickListener(new OnClickListener() {
@@ -151,8 +151,9 @@ public class PiqularMainActivity extends ActionBarActivity {
     }
     
     private void testing() {
-    	//String link = "http://tinyurl.com/api-create.php?url=http://scripting.com/";
-    	//UrlShortener.getInstance(this).shorten(link);
+    	TextView tv = (TextView) findViewById(R.id.tinyurl_main);
+    	tv.setText("http://tinyurl.com/kmh9fjm");
+    	Button b = (Button) findViewById(R.id.create_website_button);
     }
     
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -1,4 +1,4 @@
-package com.piqular;
+package com.piqular.website;
 
 import java.io.IOException;
 
@@ -7,6 +7,9 @@ import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
+
+import com.piqular.R;
+import com.piqular.R.id;
 
 import android.app.Activity;
 import android.net.http.AndroidHttpClient;
