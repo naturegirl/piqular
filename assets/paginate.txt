@@ -1,7 +1,7 @@
 	  <section class="pagination">
-	      <div class="prev"><a href="#PREV#.html">Prev</a></div>
-		 <a class="jump" href="#PRECURR#.html">#PRECURR#</a>
+	      <div class="prev"><a href="#PREVLINK#">Prev</a></div>
+		 <a class="jump" href="#PRECURRLINK#">#PRECURR#</a>
 	      <span class="current">#CURRENT#</span>
-	      <a class="jump" href="#POSTCURR#.html">#POSTCURR#</a>
-	      <div class="next"><a href="#NEXT#.html">Next</a></div>
+	      <a class="jump" href="#POSTCURRLINK#">#POSTCURR#</a>
+	      <div class="next"><a href="#NEXTLINK#">Next</a></div>
 	  </section>

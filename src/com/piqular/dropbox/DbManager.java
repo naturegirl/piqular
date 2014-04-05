@@ -2,10 +2,20 @@ package com.piqular.dropbox;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.http.AndroidHttpClient;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccountManager;
@@ -14,6 +24,7 @@ import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.piqular.PiqularMainActivity;
+import com.piqular.R;
 
 
 public class DbManager {
@@ -24,7 +35,7 @@ public class DbManager {
     private final static String appSecret = "rdqxnyirkc2rttp";
     
     public final static String AppDir = "Piqular/";
-    private final static String directory = "Public/"+AppDir;
+    private final static String PhotoDir = AppDir + "Photos/";
     
     private Context context;
     private Activity activity;
@@ -85,6 +96,40 @@ public class DbManager {
 		}
 	}
 	
+	//CANNOT BE CALLED FROM MAIN UI THREAD UNDER ANY
+	//CIRCUMSTANCES!!! THAT WOULD BE TERRIBLE!!!
+    public String[] getPublicURLs(int length, boolean photos) {
+        
+        String[] publicURLs = new String[length];
+		try{
+			for (int i = 1; i <= length; i++) {
+				DbxPath dbPath;
+				if (photos) {
+					dbPath = new DbxPath(DbxPath.ROOT, PhotoDir+getPhotoName(i));
+				} else {
+					dbPath = new DbxPath(DbxPath.ROOT, AppDir+i+".html");
+
+				}
+				Log.w("dbmanager pre url", dbPath.log());
+				Log.w("dbmanager pre url", dbPath.getName());
+				String url = dbxFs.fetchShareLink(dbPath, false).toString();
+				publicURLs[i-1] = url.replace("www.dropbox.com", "dl.dropboxusercontent.com");
+				publicURLs[i-1] = url.replaceFirst("https", "http");
+				Log.w("dbmanager nice url", publicURLs[i-1]);
+			}
+		} catch (DbxException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return publicURLs;
+    }
+    
+	
+	private String getPhotoName(int cnt) {
+		return "img"+cnt+".jpg";
+	}
+	
 	/* make sure to call setupFs before */
 	public void syncFiles(String photoPaths[]) {
 		try {
@@ -97,10 +142,12 @@ public class DbManager {
 				    }
 				});				
 			}
+			
 			int cnt = 1;		
 			for (String imgPath : photoPaths) {
-				String filename = "img"+cnt+".jpg";
-				DbxPath dbPath = new DbxPath(DbxPath.ROOT, directory+filename);
+				String filename = getPhotoName(cnt);
+				DbxPath dbPath = new DbxPath(DbxPath.ROOT, PhotoDir+filename);
+				
 				DbxFile dbFile;
 				File imgFile = new File(imgPath);
 				
@@ -126,7 +173,7 @@ public class DbManager {
 			Log.e("swifflet", "dbxFs shouldn't be null");
 			throw new RuntimeException("dbxFs is null in writeFile()");
 		}
-		DbxPath dbPath = new DbxPath(DbxPath.ROOT, directory+filename);
+		DbxPath dbPath = new DbxPath(DbxPath.ROOT, AppDir+filename);
 		try {
 			DbxFile dbFile;
 			if (dbxFs.exists(dbPath))
@@ -149,7 +196,7 @@ public class DbManager {
 			Log.e("swifflet", "dbxFs shouldn't be null");
 			throw new RuntimeException("dbxFs is null in writeFile()");
 		}
-		DbxPath dbPath = new DbxPath(DbxPath.ROOT, directory+filename);
+		DbxPath dbPath = new DbxPath(DbxPath.ROOT, AppDir+filename);
 		try {
 			DbxFile dbFile;
 			if (dbxFs.exists(dbPath))
@@ -169,7 +216,7 @@ public class DbManager {
             final String TEST_DATA = "Goodbye Dropbox";
             final String TEST_FILE_NAME = "blablabla.txt";
             
-            DbxPath testPath = new DbxPath(DbxPath.ROOT, "Public/Piqular/"+TEST_FILE_NAME);
+            DbxPath testPath = new DbxPath(DbxPath.ROOT, "Piqular/"+TEST_FILE_NAME);
 
             // Create DbxFileSystem for synchronized file access.
             DbxFileSystem dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());

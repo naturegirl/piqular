@@ -62,7 +62,6 @@ public class SiteCreateActivity extends Activity {
 
 		public void genWebsite(View view) {
 			
-			//EditText title_et = (EditText) findViewById(R.id.title);
 			String title = title_et.getText().toString();
 			String desc = desc_et.getText().toString();
 			int layout = layout_rb.getCheckedRadioButtonId();
@@ -86,9 +85,9 @@ public class SiteCreateActivity extends Activity {
 		    	SiteManager sm = SiteManager.getInstance(this, getApplicationContext(), title, desc, quoteType, fullUrls);
 		    	sm.generate();
 
-		    	String uid = DbManager.getInstance().getUid();
-		    	String longUrl = "http://dl.dropboxusercontent.com/u/" + uid + "/" + DbManager.AppDir + "1.html";
-		    	UrlShortener.getInstance(this).shorten(longUrl);
+		    	//String uid = DbManager.getInstance().getUid();
+		    	//String longUrl = "http://dl.dropboxusercontent.com/u/" + uid + "/" + DbManager.AppDir + "1.html";
+		    	//UrlShortener.getInstance(this).shorten(longUrl);
 		    	
 				Log.w("attributes", title);
 				Log.w("attributes", desc);
