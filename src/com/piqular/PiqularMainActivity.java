@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.piqular.dropbox.DbManager;
+import com.piqular.website.UrlShortener;
 
 
 public class PiqularMainActivity extends ActionBarActivity {
@@ -36,18 +37,22 @@ public class PiqularMainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		View connectButtonView = findViewById(R.id.connect_db_button);
-		Button connectButton = (Button) connectButtonView;
+		Button connectButton = (Button) findViewById(R.id.connect_db_button);
         Button selectPicsButton = (Button) findViewById(R.id.select_photos_button);
         Button createSiteButton = (Button) findViewById(R.id.create_website_button);
         
         Button testButton = (Button) findViewById(R.id.test_button);
         
         syncStatus = SYNC_NOT_STARTED;
-		dbManager = DbManager.getInstance(this, getApplicationContext());
+        
+        UrlShortener.init(this);
+		DbManager.init(this, getApplicationContext());
+		
+		dbManager = DbManager.getInstance();
+		
         
         if (dbManager.isLinked()) {
-        	connectButtonView.setVisibility(View.INVISIBLE);
+        	connectButton.setVisibility(View.INVISIBLE);
         }
         else {
 	        connectButton.setOnClickListener(new OnClickListener() {

@@ -87,10 +87,11 @@ public class SiteCreateActivity extends Activity {
 
 		    	String uid = DbManager.getInstance().getUid();
 		    	String longUrl = "http://dl.dropboxusercontent.com/u/" + uid + "/" + DbManager.AppDir + "1.html";
-		    	UrlShortener.getInstance(this).shorten(longUrl);
+		    	UrlShortener.getInstance().shorten(longUrl);
 		    	
 				Log.w("attributes", title);
 				Log.w("attributes", desc);
+				finish();
 			}
 		}
 		
