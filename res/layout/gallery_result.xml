@@ -12,7 +12,7 @@
         android:layout_weight="1" >
 
         <GridView
-            android:id="@+id/gridGallery"
+            android:id="@+id/resultGridGallery"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
@@ -35,13 +35,18 @@
         android:orientation="horizontal"
         android:padding="5dp" >
 
-	    <Button
-	        android:id="@+id/gallery_ok_button"
-	        android:layout_width="match_parent"
+        <Button
+	        android:id="@+id/result_gallery_back_button"
+	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        style="@style/blueButton"
-	        android:text="OK" />
-        
+	        style="@style/galleryButton"
+	        android:text="Cancel" />
+	    <Button
+	        android:id="@+id/result_gallery_ok_button"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        style="@style/galleryButton"
+	        android:text="OK, Upload!" />
         </LinearLayout>
     
 

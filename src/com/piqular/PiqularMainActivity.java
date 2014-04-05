@@ -3,7 +3,6 @@ package com.piqular;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -12,15 +11,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.piqular.dropbox.DbManager;
+import com.piqular.website.UrlShortener;
 
 
 public class PiqularMainActivity extends ActionBarActivity {
 
 	private DbManager dbManager;
-	private String photoPaths[];		// paths to the local photo files
+	private String[] photoPaths;		// paths to the local photo files
 	private String[] fullUrls;			// paths to the final public urls
 	private int syncStatus;				// status of dropbox syncing
 	
@@ -36,19 +37,22 @@ public class PiqularMainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		View connectButtonView = findViewById(R.id.connect_db_button);
-		Button connectButton = (Button) connectButtonView;
+		Button connectButton = (Button) findViewById(R.id.connect_db_button);
         Button selectPicsButton = (Button) findViewById(R.id.select_photos_button);
-        Button syncButton = (Button) findViewById(R.id.sync_db_button);
         Button createSiteButton = (Button) findViewById(R.id.create_website_button);
         
         Button testButton = (Button) findViewById(R.id.test_button);
         
         syncStatus = SYNC_NOT_STARTED;
-		dbManager = DbManager.getInstance(this, getApplicationContext());
+        
+        UrlShortener.init(this);
+		DbManager.init(this, getApplicationContext());
+		
+		dbManager = DbManager.getInstance();
+		
         
         if (dbManager.isLinked()) {
-        	connectButtonView.setVisibility(View.GONE);
+        	connectButton.setVisibility(View.INVISIBLE);
         }
         else {
 	        connectButton.setOnClickListener(new OnClickListener() {
@@ -62,12 +66,6 @@ public class PiqularMainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				onClickStartPhotoSelect();
 			}
-        });
-        
-        syncButton.setOnClickListener(new OnClickListener() {
-        	public void onClick(View v) {
-        		onClickSyncDropbox();
-        	}
         });
         
         testButton.setOnClickListener(new OnClickListener() {
@@ -105,21 +103,6 @@ public class PiqularMainActivity extends ActionBarActivity {
     	startActivityForResult(intent, SELECT_PHOTO_REQUEST);
     }
     
-    private void onClickSyncDropbox() {
-    	if (!dbManager.isLinked()) {
-    		String msg = "please link with dropbox first.";
-        	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-        	return;
-    	}
-    	else if (photoPaths == null || photoPaths.length == 0) {
-    		String msg = "please select photos first.";
-        	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-        	return;
-    	}
-    	dbManager.syncFiles(photoPaths);
-    	syncStatus = SYNC_STARTED;
-    }
-    
     private void onClickCreateWebsite() {
     	if (!dbManager.isLinked()) {
     		String msg = "please link with dropbox first.";
@@ -151,8 +134,9 @@ public class PiqularMainActivity extends ActionBarActivity {
     }
     
     private void testing() {
-    	//String link = "http://tinyurl.com/api-create.php?url=http://scripting.com/";
-    	//UrlShortener.getInstance(this).shorten(link);
+    	TextView tv = (TextView) findViewById(R.id.tinyurl_main);
+    	tv.setText("http://tinyurl.com/kmh9fjm");
+    	Button b = (Button) findViewById(R.id.create_website_button);
     }
     
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -163,6 +147,8 @@ public class PiqularMainActivity extends ActionBarActivity {
 			for (String path : photoPaths) {
 				Log.w("swifflet", path);
 			}
+			syncStatus = SYNC_STARTED;
+			dbManager.syncFiles(photoPaths);
 		}
 		
 		if (requestCode == LINK_DB_REQUEST && resultCode != Activity.RESULT_OK) {

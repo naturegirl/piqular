@@ -31,6 +31,9 @@ public class SiteCreateActivity extends Activity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.site_main);
 			
+			android.app.ActionBar ab = getActionBar();
+			ab.setDisplayHomeAsUpEnabled(false);
+
 			quote_s = (Spinner) findViewById(R.id.quote_cat);
 			ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 			        R.array.quote_options, android.R.layout.simple_spinner_item);
@@ -40,11 +43,6 @@ public class SiteCreateActivity extends Activity {
 			title_et = (EditText) findViewById(R.id.title);
 			desc_et = (EditText) findViewById(R.id.desc);
 			layout_rb = (RadioGroup) findViewById(R.id.layout);
-			
-			Context context = getApplicationContext();
-			String title = "Vacation Photos";
-			String desc = "Tigers! Lots and Lots of Tigers.";
-			int cat = 2;
 			
 			Bundle extras = getIntent().getExtras();
 			if (extras != null) {
@@ -88,9 +86,11 @@ public class SiteCreateActivity extends Activity {
 		    	//String uid = DbManager.getInstance().getUid();
 		    	//String longUrl = "http://dl.dropboxusercontent.com/u/" + uid + "/" + DbManager.AppDir + "1.html";
 		    	//UrlShortener.getInstance(this).shorten(longUrl);
+
 		    	
 				Log.w("attributes", title);
 				Log.w("attributes", desc);
+				finish();
 			}
 		}
 		

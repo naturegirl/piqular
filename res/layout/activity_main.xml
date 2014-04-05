@@ -12,7 +12,7 @@
         android:orientation="vertical" >
 
         <Button
-            style="@style/buttonStyle"
+            style="@style/blueButton"
             android:layout_marginTop="30dip"
             android:id="@+id/connect_db_button"
             android:layout_width="match_parent"
@@ -20,34 +20,37 @@
             android:text="Connect with Dropbox" />
 
 	    <Button
-	        style="@style/buttonStyle"
+	        style="@style/blueButton"
 	        android:id="@+id/select_photos_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:text="Select photos" />
 
 	    <Button
-	        style="@style/buttonStyle"
-	        android:id="@+id/sync_db_button"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="Sync with Dropbox" />
-
-	    <Button
-	        style="@style/buttonStyle"
+	        style="@style/purpleButton"
 	        android:id="@+id/create_website_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:text="Create website" />
 	    	    	    	    	    	    	        
 	    <Button
-	        style="@style/buttonStyle"
-	        android:visibility="gone"
+	        style="@style/blueButton"
 	        android:id="@+id/test_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
+	        android:visibility="gone"
 	        android:text="Test me" />
 
+        <TextView
+            android:id="@+id/tinyurl_main"
+            android:layout_margin="10dip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:autoLink="web"
+            />
+	    	    
 	</LinearLayout>
 
 </FrameLayout>

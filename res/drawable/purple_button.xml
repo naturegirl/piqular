@@ -3,17 +3,28 @@
   <item android:state_pressed="true" >
     <shape>
       <solid
-          android:color="#2069e8" />
+          android:color="#AD3FA6" />
       <corners
           android:radius="40dp" />
+      <padding
+          android:left="10dp"
+          android:top="10dp"
+          android:right="10dp"
+          android:bottom="10dp" />
     </shape>
   </item>
   <item>
     <shape>
       <solid
-          android:color="#588eee" />         
+          android:color="#B552AF" />         
       <corners
           android:radius="40dp" />
+       <padding
+          android:left="10dp"
+          android:top="10dp"
+          android:right="10dp"
+          android:bottom="10dp" />
+
     </shape>
   </item>
 </selector>

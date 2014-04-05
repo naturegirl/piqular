@@ -49,17 +49,19 @@ public class DbManager {
 		mDbxAcctMgr = DbxAccountManager.getInstance(context, appKey, appSecret);
 	}
 	
-	public static DbManager getInstance(Activity act, Context ctx) {
-		if (instance == null) {
-			instance = new DbManager(act, ctx);
+	// call init in main activity before calling getInstance()
+	public static void init(Activity act, Context ctx) {
+		if (instance != null) {
+			throw new RuntimeException("already called init()!");
 		}
-		return instance;
+		instance = new DbManager(act, ctx);
 	}
+	
 	// call only when the other one with act/ctx has been called before
 	public static DbManager getInstance() {
 		if (instance == null) {
-			Log.e("swifflet", "call getInstance(activity, context) first instead!");
-			throw new RuntimeException("called wrong getInstance() function");
+			Log.e("swifflet", "call init() first first instead!");
+			throw new RuntimeException("call init() before calling getInstance");
 		}
 		return instance;
 	}

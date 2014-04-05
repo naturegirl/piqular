@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -18,6 +21,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -40,10 +46,16 @@ public class PhotoSelectActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gallery);
 		
+		android.app.ActionBar ab = getActionBar();
+		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setTitle("Select photos");
+
 		mItemMulClickListener = new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> l, View v, int position, long id) {
 				adapter.changeSelection(v, position);
+				android.app.ActionBar ab = getActionBar();
+				ab.setTitle("Select photos         (" + adapter.getSelectCount() + " selected)");
 			}
 		};
 		
@@ -102,15 +114,81 @@ public class PhotoSelectActivity extends Activity {
 		}.start();
     }
     
+    /*
+     * only show the selected photos in the gridview to let the user confirm
+     */
     private void okButtonClicked() {
-    	ArrayList<PhotoItem> selected = adapter.getSelected();
-		String[] photoPaths = new String[selected.size()];
+    	
+    	android.app.ActionBar ab = getActionBar();
+    	ab.setTitle("Confirm Selection");
+    	ab.setDisplayHomeAsUpEnabled(false);
+    	
+    	setContentView(R.layout.gallery_result);
+    	
+		final ArrayList<PhotoItem> selected = adapter.getSelected();
+		final String[] photoPaths = new String[selected.size()];
 		for (int i = 0; i < photoPaths.length; i++) {
 			photoPaths[i] = selected.get(i).getPath();
 		}
-		Intent data = new Intent().putExtra("photo_paths", photoPaths);
-		setResult(RESULT_OK, data);		
-		finish();
+		
+		GridView resultGridGallery = (GridView) findViewById(R.id.resultGridGallery);
+		final GalleryAdapter resultAdapter = new GalleryAdapter(getApplicationContext(), imageLoader);
+		adapter.setMultiplePick(false);
+		resultGridGallery.setAdapter(resultAdapter);
+		new Thread() {
+			public void run() {
+				Looper.prepare();
+				handler.post(new Runnable() {
+					public void run() {
+						resultAdapter.addAll(selected);
+					}
+				});
+				Looper.loop();
+			};
+		}.start();
+		
+		Button cancelButton = (Button) findViewById(R.id.result_gallery_back_button);
+        cancelButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+            	onCreate(null);
+            }
+        });
+        
+        /* display this dialog when user is not on wifi */
+        String msg = "You're not connected to WiFi. The photo upload might take up lots of bandwidth. Continue anyway?";
+        final AlertDialog alert = new AlertDialog.Builder(this).
+        		setMessage(msg)
+               .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int id) {
+               		Intent data = new Intent().putExtra("photo_paths", photoPaths);
+            		setResult(RESULT_OK, data);
+            		finish();
+                   }
+               })
+               .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int id) {
+                       
+                   }
+               })
+               .create();
+        
+		
+		Button uploadButton = (Button) findViewById(R.id.result_gallery_ok_button);
+        uploadButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+            	ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            	NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+            	if (!mWifi.isConnected()) {
+        	    	alert.show();
+            	}
+            	else {
+	        		Intent data = new Intent().putExtra("photo_paths", photoPaths);
+	        		setResult(RESULT_OK, data);
+	        		finish();
+            	}
+            }
+        });
     }
     
 	private ArrayList<PhotoItem> getGalleryPhotos() {
