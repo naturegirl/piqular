@@ -104,18 +104,18 @@ public class DbManager {
 		try{
 			for (int i = 1; i <= length; i++) {
 				DbxPath dbPath;
-				if (photos) {
-					dbPath = new DbxPath(DbxPath.ROOT, PhotoDir+getPhotoName(i));
-				} else {
-					dbPath = new DbxPath(DbxPath.ROOT, AppDir+i+".html");
-
-				}
-				Log.w("dbmanager pre url", dbPath.log());
+				if (photos) { dbPath = new DbxPath(DbxPath.ROOT, PhotoDir+getPhotoName(i));} 
+				else { dbPath = new DbxPath(DbxPath.ROOT, AppDir+i+".html");}
 				Log.w("dbmanager pre url", dbPath.getName());
-				String url = dbxFs.fetchShareLink(dbPath, false).toString();
-				publicURLs[i-1] = url.replace("www.dropbox.com", "dl.dropboxusercontent.com");
-				publicURLs[i-1] = url.replaceFirst("https", "http");
-				Log.w("dbmanager nice url", publicURLs[i-1]);
+				boolean precreated = findOrCreate(dbPath);
+				Log.w("precreation", precreated + "");
+				if (precreated) {		
+					Log.w("precreation", findOrCreate(dbPath) + "");
+					String url = dbxFs.fetchShareLink(dbPath, false).toString();
+					publicURLs[i-1] = url.replace("www.dropbox.com", "dl.dropboxusercontent.com");
+					publicURLs[i-1] = publicURLs[i-1].replaceFirst("https", "http");
+					Log.w("dbmanager nice url", publicURLs[i-1]);
+				}
 			}
 		} catch (DbxException e) {
 			e.printStackTrace();
@@ -123,6 +123,19 @@ public class DbManager {
 			e.printStackTrace();
 		}
 		return publicURLs;
+    }
+    
+    private boolean findOrCreate(DbxPath dbPath) {
+    	try {
+			if (dbxFs.exists(dbPath)) return true;
+            DbxFile preFile = dbxFs.create(dbPath);
+            preFile.close();
+            return true;
+		} catch (DbxException e) {
+			e.printStackTrace();
+		}
+    	
+    	return false;
     }
     
 	

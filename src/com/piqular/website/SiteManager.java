@@ -128,45 +128,6 @@ public class SiteManager {
 	// generates and writes the website
 	public void generate() {
 		new GenerateTask().execute();
-		
-		//writeCss();
-		/*int p = 0;
-		try {
-			int max = (int) Math.ceil((double)images.length/NUM_IMG_PER_PAGE);
-			Log.w("max", max+"");
-			for (int i = 1; i <= max; i++) {
-				String filename = i + ".html";
-				DbxFile dbFile = DbManager.getInstance().getFileToWrite(filename);
-				StringBuilder sb = new StringBuilder();
-				writeHeaders(sb, title, desc);
-				
-				for (int j = 0; j < NUM_IMG_PER_PAGE && p < images.length; j++) {
-					Log.w("photo", images[p]);
-					printPhoto(sb, images[p], "");
-					p++;
-					if (category != 0) {
-						if (p % QUOTE_IMG_RATIO == 0) {
-							String[] quote = chooseQuote(category-1);
-							printQuote(sb, quote);
-						}
-					}
-				}
-				printFooters(sb, i, max);
-				dbFile.writeString(sb.toString());
-				dbFile.close();
-			}
-		} catch (Exception e) { e.printStackTrace(); }*/
-	}
-
-	private void writeCss () {
-		try {
-			InputStream is = manager.open(CssFilename);
-		    Scanner s = new Scanner(is);			// convert inputstream to string
-		    s.useDelimiter("\\A");
-		    String content = s.hasNext() ? s.next() : "";
-		    s.close();
-		    DbManager.getInstance().writeFile(content, CssFilename);
-		} catch (IOException e) { e.printStackTrace(); }
 	}
 	
 	private void writeHeaders(StringBuilder sb, String title, String desc, String link) {
@@ -179,7 +140,7 @@ public class SiteManager {
 				line = line.replace("#HOME#", link);
 				if (line.contains("#DESCRIPTION#")) {
 					if (desc == null || desc == "") line = "";
-					else line.replace("#DESCRIPTION#", desc);	
+					else line = line.replace("#DESCRIPTION#", desc);	
 				}
 				sb.append(line+"\n");
 				//Log.w("swifflet", line);
