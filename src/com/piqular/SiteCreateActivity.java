@@ -45,11 +45,6 @@ public class SiteCreateActivity extends Activity {
 			desc_et = (EditText) findViewById(R.id.desc);
 			layout_rb = (RadioGroup) findViewById(R.id.layout);
 			
-			Context context = getApplicationContext();
-			String title = "Vacation Photos";
-			String desc = "Tigers! Lots and Lots of Tigers.";
-			int cat = 2;
-			
 			Bundle extras = getIntent().getExtras();
 			if (extras != null) {
 			    fullUrls = extras.getStringArray("full_urls");
