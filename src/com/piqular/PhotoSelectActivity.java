@@ -4,22 +4,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -149,13 +153,40 @@ public class PhotoSelectActivity extends Activity {
             	onCreate(null);
             }
         });
+        
+        /* display this dialog when user is not on wifi */
+        String msg = "You're not connected to WiFi. The photo upload might take up lots of bandwidth. Continue anyway?";
+        final AlertDialog alert = new AlertDialog.Builder(this).
+        		setMessage(msg)
+               .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int id) {
+               		Intent data = new Intent().putExtra("photo_paths", photoPaths);
+            		setResult(RESULT_OK, data);
+            		finish();
+                   }
+               })
+               .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                   public void onClick(DialogInterface dialog, int id) {
+                       
+                   }
+               })
+               .create();
+        
 		
 		Button uploadButton = (Button) findViewById(R.id.result_gallery_ok_button);
         uploadButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-        		Intent data = new Intent().putExtra("photo_paths", photoPaths);
-        		setResult(RESULT_OK, data);
-        		finish();
+            	ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            	NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+            	if (!mWifi.isConnected()) {
+        	    	alert.show();
+            	}
+            	else {
+	        		Intent data = new Intent().putExtra("photo_paths", photoPaths);
+	        		setResult(RESULT_OK, data);
+	        		finish();
+            	}
             }
         });
     }
