@@ -45,8 +45,8 @@ public class PiqularMainActivity extends ActionBarActivity {
         
         syncStatus = SYNC_NOT_STARTED;
         
-        UrlShortener.init(this);
-		DbManager.init(this, getApplicationContext());
+        if (!UrlShortener.alreadyInit()) UrlShortener.init(this);
+		if (!DbManager.alreadyInit()) DbManager.init(this, getApplicationContext());
 		
 		dbManager = DbManager.getInstance();
 		

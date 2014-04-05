@@ -26,7 +26,7 @@ import android.widget.EditText;
 
 import com.dropbox.sync.android.DbxFile;
 import com.piqular.R;
-import com.piqular.UrlShortener;
+import com.piqular.website.UrlShortener;
 import com.piqular.dropbox.DbManager;
 
 public class SiteManager {
@@ -91,7 +91,7 @@ public class SiteManager {
             	Log.w("htmlDocs URLS", htmlDocs[i]);
             }
             //NEED TO GET SITECREATEACTIVITY
-            UrlShortener.getInstance(activity).shorten(htmlDocs[0]);
+            UrlShortener.getInstance().shorten(htmlDocs[0]);
             int p = 0;
     		try {
 				for (int i = 1; i <= max; i++) {

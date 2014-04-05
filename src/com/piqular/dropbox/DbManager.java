@@ -49,6 +49,11 @@ public class DbManager {
 		mDbxAcctMgr = DbxAccountManager.getInstance(context, appKey, appSecret);
 	}
 	
+	public static boolean alreadyInit() {
+		if (instance != null) return true;
+		return false;
+	}
+	
 	// call init in main activity before calling getInstance()
 	public static void init(Activity act, Context ctx) {
 		if (instance != null) {

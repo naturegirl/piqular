@@ -37,6 +37,11 @@ public class UrlShortener {
 		return instance;
 	}
 	
+	public static boolean alreadyInit() {
+		if (instance != null) return true;
+		return false;
+	}
+	
 	// run init before calling getInstance
 	public static void init(Activity act) {
 		if (instance != null) {
