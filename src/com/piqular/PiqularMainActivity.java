@@ -20,7 +20,7 @@ import com.piqular.dropbox.DbManager;
 public class PiqularMainActivity extends ActionBarActivity {
 
 	private DbManager dbManager;
-	private String photoPaths[];		// paths to the local photo files
+	private String[] photoPaths;		// paths to the local photo files
 	private String[] fullUrls;			// paths to the final public urls
 	private int syncStatus;				// status of dropbox syncing
 	
@@ -39,7 +39,6 @@ public class PiqularMainActivity extends ActionBarActivity {
 		View connectButtonView = findViewById(R.id.connect_db_button);
 		Button connectButton = (Button) connectButtonView;
         Button selectPicsButton = (Button) findViewById(R.id.select_photos_button);
-        Button syncButton = (Button) findViewById(R.id.sync_db_button);
         Button createSiteButton = (Button) findViewById(R.id.create_website_button);
         
         Button testButton = (Button) findViewById(R.id.test_button);
@@ -62,12 +61,6 @@ public class PiqularMainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				onClickStartPhotoSelect();
 			}
-        });
-        
-        syncButton.setOnClickListener(new OnClickListener() {
-        	public void onClick(View v) {
-        		onClickSyncDropbox();
-        	}
         });
         
         testButton.setOnClickListener(new OnClickListener() {
@@ -103,21 +96,6 @@ public class PiqularMainActivity extends ActionBarActivity {
     	Intent intent = new Intent(this, PhotoSelectActivity.class);
     	intent.putExtra("key","value");
     	startActivityForResult(intent, SELECT_PHOTO_REQUEST);
-    }
-    
-    private void onClickSyncDropbox() {
-    	if (!dbManager.isLinked()) {
-    		String msg = "please link with dropbox first.";
-        	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-        	return;
-    	}
-    	else if (photoPaths == null || photoPaths.length == 0) {
-    		String msg = "please select photos first.";
-        	Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-        	return;
-    	}
-    	dbManager.syncFiles(photoPaths);
-    	syncStatus = SYNC_STARTED;
     }
     
     private void onClickCreateWebsite() {
@@ -164,6 +142,8 @@ public class PiqularMainActivity extends ActionBarActivity {
 			for (String path : photoPaths) {
 				Log.w("swifflet", path);
 			}
+			syncStatus = SYNC_STARTED;
+			dbManager.syncFiles(photoPaths);
 		}
 		
 		if (requestCode == LINK_DB_REQUEST && resultCode != Activity.RESULT_OK) {

@@ -65,9 +65,6 @@ public class UrlShortener {
             	HttpEntity entity = result.getEntity();
             	try {
 					String shortUrl = EntityUtils.toString(entity, "UTF-8");
-					Log.w("swifflet", shortUrl);
-			    	EditText et = (EditText) activity.findViewById(R.id.tinyurl);
-			    	et.setText(shortUrl);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				} catch (IOException e) {

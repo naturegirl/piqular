@@ -27,13 +27,6 @@
 	        android:text="Select photos" />
 
 	    <Button
-	        style="@style/blueButton"
-	        android:id="@+id/sync_db_button"
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="Sync with Dropbox" />
-
-	    <Button
 	        style="@style/purpleButton"
 	        android:id="@+id/create_website_button"
 	        android:layout_width="match_parent"

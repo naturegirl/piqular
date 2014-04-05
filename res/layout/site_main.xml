@@ -88,12 +88,6 @@
             android:background="@drawable/blue_button"
             android:text="Generate Website!" 
             android:onClick="genWebsite" />
-        <TextView
-            android:id="@+id/tinyurl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:ems="10" />
         
     </LinearLayout>
 

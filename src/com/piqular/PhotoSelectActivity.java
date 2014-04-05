@@ -121,7 +121,7 @@ public class PhotoSelectActivity extends Activity {
     	
     	setContentView(R.layout.gallery_result);
     	
-    	final ArrayList<PhotoItem> selected = adapter.getSelected();
+		final ArrayList<PhotoItem> selected = adapter.getSelected();
 		final String[] photoPaths = new String[selected.size()];
 		for (int i = 0; i < photoPaths.length; i++) {
 			photoPaths[i] = selected.get(i).getPath();
