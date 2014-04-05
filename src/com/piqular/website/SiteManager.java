@@ -36,7 +36,6 @@ public class SiteManager {
 	private static int NUM_IMG_PER_PAGE = 7;
 	private static int QUOTE_IMG_RATIO = 3;
 	
-	private static String CssFilename = "mystyle.css";
 	private static String HeaderFilename = "header.txt";
 	private static String QuotesFilename = "quote.txt";
 	private static String PaginateFilename = "paginate.txt";
@@ -97,7 +96,6 @@ public class SiteManager {
     		try {
 				for (int i = 1; i <= max; i++) {
 					String filename = i + ".html";
-					DbxFile dbFile = DbManager.getInstance().getFileToWrite(filename);
 					StringBuilder sb = new StringBuilder();
 					writeHeaders(sb, title, desc, htmlDocs[0]);
 					
@@ -113,8 +111,7 @@ public class SiteManager {
 						}
 					}
 					printFooters(sb, i, max, htmlDocs);
-					dbFile.writeString(sb.toString());
-					dbFile.close();
+					DbManager.getInstance().writeFile(sb.toString(), filename);
 				}
     		} catch (Exception e) { e.printStackTrace(); }
             
@@ -158,36 +155,30 @@ public class SiteManager {
 				String line;
 				while ((line = br.readLine()) != null) {
 					if (line.contains("#PREVLINK#")) {
-						if (i == 1) line = "";
-						sb.append(line.replace("#PREVLINK#", links[i-1] + "")+"\n");
+						if (i != 1) sb.append(line.replace("#PREVLINK#", links[i-2] + "")+"\n");
 					}
 					else if (line.contains("#NEXTLINK#")) {
-						if (i >= max) line = "";
-						sb.append(line.replace("#NEXTLINK#", links[i+1] + "")+"\n");
+						if (i < max) sb.append(line.replace("#NEXTLINK#", links[i] + "")+"\n");
 					}
 					else if (line.contains("#PRECURRLINK#")) {
-						if ((i-2) >= 1)
-							sb.append(line.replace("#PRECURRLINK#", links[i-2] + "")+"\n");
-						if ((i-1) >= 1)
-							sb.append(line.replace("#PRECURRLINK#", links[i-1] + "")+"\n");
-					}
-					else if (line.contains("#PRECURR#")) {
-						if ((i-2) >= 1)
+						if ((i-2) >= 1) {
+							line = line.replace("#PRECURRLINK#", links[i-3] + "")+"\n";
 							sb.append(line.replace("#PRECURR#", (i-2) + "")+"\n");
-						if ((i-1) >= 1)
+						}
+						if ((i-1) >= 1) {
+							line = line.replace("#PRECURRLINK#", links[i-2] + "")+"\n";
 							sb.append(line.replace("#PRECURR#", (i-1) + "")+"\n");
+						}
 					}
 					else if (line.contains("#POSTCURRLINK#")) {
-						if ((i+1) <= max)
-							sb.append(line.replace("#POSTCURRLINK#", links[i+1] + "")+"\n");
-						if ((i+2) <= max) 
-							sb.append(line.replace("#POSTCURRLINK#", links[i+2] + "")+"\n");
-					}
-					else if (line.contains("#POSTCURR#")) {
-						if ((i+1) <= max)
+						if ((i+1) <= max) {
+							line = line.replace("#POSTCURRLINK#", links[i] + "")+"\n";
 							sb.append(line.replace("#POSTCURR#", (i+1) + "")+"\n");
-						if ((i+2) <= max) 
+						}
+						if ((i+2) <= max) {
+							line = line.replace("#POSTCURRLINK#", links[i+1] + "")+"\n";
 							sb.append(line.replace("#POSTCURR#", (i+2) + "")+"\n");
+						}
 					}
 					else if (line.contains("#CURRENT#")) {
 						sb.append(line.replace("#CURRENT#", (i) + "")+"\n");

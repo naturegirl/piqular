@@ -106,15 +106,11 @@ public class DbManager {
 				DbxPath dbPath;
 				if (photos) { dbPath = new DbxPath(DbxPath.ROOT, PhotoDir+getPhotoName(i));} 
 				else { dbPath = new DbxPath(DbxPath.ROOT, AppDir+i+".html");}
-				Log.w("dbmanager pre url", dbPath.getName());
-				boolean precreated = findOrCreate(dbPath);
-				Log.w("precreation", precreated + "");
-				if (precreated) {		
-					Log.w("precreation", findOrCreate(dbPath) + "");
+				if (findOrCreate(dbPath)) {		
 					String url = dbxFs.fetchShareLink(dbPath, false).toString();
 					publicURLs[i-1] = url.replace("www.dropbox.com", "dl.dropboxusercontent.com");
 					publicURLs[i-1] = publicURLs[i-1].replaceFirst("https", "http");
-					Log.w("dbmanager nice url", publicURLs[i-1]);
+					Log.w("public url", publicURLs[i-1]);
 				}
 			}
 		} catch (DbxException e) {
@@ -137,8 +133,8 @@ public class DbManager {
     	
     	return false;
     }
+
     
-	
 	private String getPhotoName(int cnt) {
 		return "img"+cnt+".jpg";
 	}
