@@ -11,9 +11,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -40,10 +42,16 @@ public class PhotoSelectActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.gallery);
 		
+		android.app.ActionBar ab = getActionBar();
+		ab.setDisplayHomeAsUpEnabled(true);
+		ab.setTitle("Select photos");
+
 		mItemMulClickListener = new AdapterView.OnItemClickListener() {
 
 			public void onItemClick(AdapterView<?> l, View v, int position, long id) {
 				adapter.changeSelection(v, position);
+				android.app.ActionBar ab = getActionBar();
+				ab.setTitle("Select photos         (" + adapter.getSelectCount() + " selected)");
 			}
 		};
 		
@@ -102,15 +110,54 @@ public class PhotoSelectActivity extends Activity {
 		}.start();
     }
     
+    /*
+     * only show the selected photos in the gridview to let the user confirm
+     */
     private void okButtonClicked() {
-    	ArrayList<PhotoItem> selected = adapter.getSelected();
-		String[] photoPaths = new String[selected.size()];
+    	
+    	android.app.ActionBar ab = getActionBar();
+    	ab.setTitle("Confirm Selection");
+    	ab.setDisplayHomeAsUpEnabled(false);
+    	
+    	setContentView(R.layout.gallery_result);
+    	
+    	final ArrayList<PhotoItem> selected = adapter.getSelected();
+		final String[] photoPaths = new String[selected.size()];
 		for (int i = 0; i < photoPaths.length; i++) {
 			photoPaths[i] = selected.get(i).getPath();
 		}
-		Intent data = new Intent().putExtra("photo_paths", photoPaths);
-		setResult(RESULT_OK, data);		
-		finish();
+		
+		GridView resultGridGallery = (GridView) findViewById(R.id.resultGridGallery);
+		final GalleryAdapter resultAdapter = new GalleryAdapter(getApplicationContext(), imageLoader);
+		adapter.setMultiplePick(false);
+		resultGridGallery.setAdapter(resultAdapter);
+		new Thread() {
+			public void run() {
+				Looper.prepare();
+				handler.post(new Runnable() {
+					public void run() {
+						resultAdapter.addAll(selected);
+					}
+				});
+				Looper.loop();
+			};
+		}.start();
+		
+		Button cancelButton = (Button) findViewById(R.id.result_gallery_back_button);
+        cancelButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+            	onCreate(null);
+            }
+        });
+		
+		Button uploadButton = (Button) findViewById(R.id.result_gallery_ok_button);
+        uploadButton.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+        		Intent data = new Intent().putExtra("photo_paths", photoPaths);
+        		setResult(RESULT_OK, data);
+        		finish();
+            }
+        });
     }
     
 	private ArrayList<PhotoItem> getGalleryPhotos() {

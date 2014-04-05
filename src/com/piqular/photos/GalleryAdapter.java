@@ -20,6 +20,7 @@ public class GalleryAdapter extends BaseAdapter {
 	private LayoutInflater infalter;
 	private ArrayList<PhotoItem> data = new ArrayList<PhotoItem>();
 	ImageLoader imageLoader;
+	private int selectCount;		// how many are currently selected 
 
 	private boolean isActionMultiplePick;
 
@@ -27,12 +28,17 @@ public class GalleryAdapter extends BaseAdapter {
 		infalter = (LayoutInflater) c
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		this.imageLoader = imageLoader;
+		selectCount = 0;
         clearCache();
 	}
 
 	@Override
 	public int getCount() {
 		return data.size();
+	}
+	
+	public int getSelectCount() {
+		return selectCount;
 	}
 
 	@Override
@@ -112,8 +118,10 @@ public class GalleryAdapter extends BaseAdapter {
 
 		if (data.get(position).isSeleted) {
 			data.get(position).isSeleted = false;
+			selectCount--;
 		} else {
 			data.get(position).isSeleted = true;
+			selectCount++;
 		}
 
         ((ViewHolder) v.getTag()).imgQueueMultiSelected.setSelected(data.get(position).isSeleted);

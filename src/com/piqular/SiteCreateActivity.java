@@ -32,6 +32,9 @@ public class SiteCreateActivity extends Activity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.site_main);
 			
+			android.app.ActionBar ab = getActionBar();
+			ab.setDisplayHomeAsUpEnabled(false);
+
 			quote_s = (Spinner) findViewById(R.id.quote_cat);
 			ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
 			        R.array.quote_options, android.R.layout.simple_spinner_item);
