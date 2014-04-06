@@ -39,8 +39,21 @@ public class SiteManager {
     private String[] images;
     int category;
 
-    private SiteManager (Activity act, Context ctx, String title, String desc, int category, String[] images) {
+    private SiteManager () {
 
+    }
+
+    public static SiteManager getInstance() {
+	if (instance == null) {
+	    instance = new SiteManager();
+	}
+	return instance;
+
+    }
+
+    public void initSiteInfo(Activity act, Context ctx, 
+	    String title, String desc, 
+	    int category, String[] images) {
 	this.activity = act;
 	this.context = ctx;
 	manager = context.getAssets();
@@ -48,19 +61,12 @@ public class SiteManager {
 	this.title = title;
 	this.desc = desc;
 	this.category = category;
-
     }
 
-    public static SiteManager getInstance(Activity act, Context ctx, 
-	    String title, String desc, 
-	    int category, String[] images) {
-	if (instance == null) {
-	    instance = new SiteManager(act, ctx, title, desc, category, images);
-	}
-	return instance;
-
+    public String getTitle() {
+	return title;
     }
-
+    
     private class GenerateTask extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected Void doInBackground(Void ... nothing) {

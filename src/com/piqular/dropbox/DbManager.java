@@ -2,8 +2,6 @@ package com.piqular.dropbox;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-
 
 import android.app.Activity;
 import android.content.Context;
@@ -73,6 +71,12 @@ public class DbManager {
     public String[] getPhotoUrls() {
 	return photoUrls;
     }
+    
+    public String getUserName() {
+	String name = dbxFs.getAccount().getAccountInfo().userName;
+	if (name != null) return name;
+	return "your friend";
+    }    
 
     public boolean isLinked() {
 	return mDbxAcctMgr.hasLinkedAccount();

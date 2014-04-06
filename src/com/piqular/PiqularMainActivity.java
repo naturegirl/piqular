@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.piqular.dropbox.DbManager;
+import com.piqular.website.SiteManager;
 import com.piqular.website.UrlShortener;
 
 
@@ -89,6 +90,7 @@ public class PiqularMainActivity extends ActionBarActivity {
     public void displayResultUrl(final String url) {
 	TextView tv = (TextView) findViewById(R.id.tinyurl_main);
 	tv.setText(url);
+	
 	Button copyButton = (Button) findViewById(R.id.copyButton);
 	Button shareButton = (Button) findViewById(R.id.shareButton);
 	copyButton.setVisibility(View.VISIBLE);
@@ -106,9 +108,19 @@ public class PiqularMainActivity extends ActionBarActivity {
 	    public void onClick(View v) {
 		Intent sendIntent = new Intent();
 		sendIntent.setAction(Intent.ACTION_SEND);
-		sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, check out "+url);
+
+		String title = SiteManager.getInstance().getTitle();
+		String name = DbManager.getInstance().getUserName();				
+		
+		//mail to
+		String subject = name + " has shared '" + title + "' with you!";
+		String message = "Hey!\n\nCheck out "+ name + "'s moments at " + url + "\n\nbrought to you by piqular\nTransform your moments.";
+
 		sendIntent.setType("text/plain");
-		startActivity(Intent.createChooser(sendIntent, "Share your website link to"));
+		sendIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+		sendIntent.putExtra(android.content.Intent.EXTRA_TEXT, message);
+
+		startActivity(Intent.createChooser(sendIntent, "Share with your friends!"));		
 	    }
 	});
     }

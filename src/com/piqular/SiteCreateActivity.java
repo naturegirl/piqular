@@ -80,7 +80,8 @@ public class SiteCreateActivity extends Activity {
 	    toast.show();
 	} else {
 	    //site manager
-	    SiteManager sm = SiteManager.getInstance(this, getApplicationContext(), title, desc, quoteType, fullUrls);
+	    SiteManager sm = SiteManager.getInstance();
+	    sm.initSiteInfo(this, getApplicationContext(), title, desc, quoteType, fullUrls);
 	    sm.generate();
 
 	    //String uid = DbManager.getInstance().getUid();
