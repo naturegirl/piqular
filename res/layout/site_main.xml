@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:padding="12dp"
         android:onClick="onClick"  >
 
         <TextView
@@ -42,37 +43,40 @@
             android:ems="10"
             android:inputType="textMultiLine" />
 
+        <!--  
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Themes:"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-		
-		<RadioGroup 
-		android:id="@+id/layout"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content">
+            
         
-	        <RadioButton
-	            android:id="@+id/minimalist"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Minimalist" />
-	
-	        <RadioButton
-	            android:id="@+id/tabular"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="Tabular" />
-	        
-	    </RadioGroup>
-
+        <RadioGroup 
+        android:id="@+id/layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+        
+            <RadioButton
+                android:id="@+id/minimalist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Minimalist" />
+    
+            <RadioButton
+                android:id="@+id/tabular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tabular" />
+            
+        </RadioGroup>
+        -->
+        
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Quotes:"
+            android:text="Include quotes about:"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Spinner

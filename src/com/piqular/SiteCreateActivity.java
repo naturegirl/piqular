@@ -29,7 +29,7 @@ public class SiteCreateActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
-	setContentView(R.layout.site_main);
+	setContentView(R.layout.website_form);
 
 	android.app.ActionBar ab = getActionBar();
 	ab.setDisplayHomeAsUpEnabled(false);
@@ -42,7 +42,7 @@ public class SiteCreateActivity extends Activity {
 
 	title_et = (EditText) findViewById(R.id.title);
 	desc_et = (EditText) findViewById(R.id.desc);
-	layout_rb = (RadioGroup) findViewById(R.id.layout);
+	// layout_rb = (RadioGroup) findViewById(R.id.layout);
 
 	Bundle extras = getIntent().getExtras();
 	if (extras != null) {
@@ -62,7 +62,8 @@ public class SiteCreateActivity extends Activity {
 
 	String title = title_et.getText().toString();
 	String desc = desc_et.getText().toString();
-	int layout = layout_rb.getCheckedRadioButtonId();
+	// int layout = layout_rb.getCheckedRadioButtonId();
+	int layout = 1;
 	int quoteType = quote_s.getSelectedItemPosition();
 
 	if (title.length() == 0 || layout == -1) {
