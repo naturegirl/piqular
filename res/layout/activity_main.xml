@@ -38,8 +38,9 @@
 	        android:id="@+id/test_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
+	        android:text="Test me"
 	        android:visibility="gone"
-	        android:text="Test me" />
+	        />
 
         <TextView
             android:id="@+id/tinyurl_main"
@@ -50,6 +51,36 @@
             android:textSize="20sp"
             android:autoLink="web"
             />
+        <LinearLayout
+	        android:id="@+id/llBottomContainer"
+	        android:layout_width="fill_parent"
+	        android:layout_height="wrap_content"
+	        android:orientation="horizontal"
+	        android:layout_marginLeft="60dip"
+	        android:layout_marginRight="60dip"
+	        android:padding="5dp" >
+
+			<Button
+			    android:id="@+id/copyButton"
+			    style="@style/actionButton"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:drawableLeft="@drawable/ic_action_copy"
+		        android:text="copy"
+		        android:layout_marginRight="20dip"
+		        android:visibility="invisible"
+		        />
+
+			<Button
+			    android:id="@+id/shareButton"
+			    style="@style/actionButton"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:drawableLeft="@drawable/ic_action_share"
+		        android:text="share"
+		        android:visibility="invisible"
+		        />
+		</LinearLayout>
 	    	    
 	</LinearLayout>
 

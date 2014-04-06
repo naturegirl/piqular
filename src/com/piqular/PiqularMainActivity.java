@@ -2,6 +2,8 @@ package com.piqular;
 
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -83,6 +85,34 @@ public class PiqularMainActivity extends ActionBarActivity {
 
 	}
 	
+	// displays the result url
+	public void displayResultUrl(final String url) {
+		TextView tv = (TextView) findViewById(R.id.tinyurl_main);
+		tv.setText(url);
+		Button copyButton = (Button) findViewById(R.id.copyButton);
+		Button shareButton = (Button) findViewById(R.id.shareButton);
+		copyButton.setVisibility(View.VISIBLE);
+		shareButton.setVisibility(View.VISIBLE);
+        copyButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+				ClipData data = ClipData.newPlainText("label", url);
+				cm.setPrimaryClip(data);
+				String msg = "website link copied to clipboard";
+				Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();		    	
+			}
+        });
+        shareButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent sendIntent = new Intent();
+				sendIntent.setAction(Intent.ACTION_SEND);
+				sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, check out "+url);
+				sendIntent.setType("text/plain");
+				startActivity(Intent.createChooser(sendIntent, "Share your website link to"));
+			}
+        });
+	}
+	
     private void onClickLinkToDropbox() {
     	if (!dbManager.isLinked())
     		dbManager.linkToDropbox();
@@ -134,9 +164,11 @@ public class PiqularMainActivity extends ActionBarActivity {
     }
     
     private void testing() {
-    	TextView tv = (TextView) findViewById(R.id.tinyurl_main);
-    	tv.setText("http://tinyurl.com/kmh9fjm");
-    	Button b = (Button) findViewById(R.id.create_website_button);
+    	Intent sendIntent = new Intent();
+    	sendIntent.setAction(Intent.ACTION_SEND);
+    	sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, check out http://tinyurl.com/me3dc2q");
+    	sendIntent.setType("text/plain");
+    	startActivity(Intent.createChooser(sendIntent, "Share link to"));
     }
     
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

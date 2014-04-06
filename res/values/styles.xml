@@ -44,6 +44,15 @@
         <item name="android:textColor">#ffffff</item>
         <item name="android:background">@drawable/blue_button</item>
     </style>
-    
+    <!-- copy and share buttons -->
+    <style name="actionButton">
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:background">@drawable/blue_button</item>
+        <item name="android:paddingLeft">8dip</item>
+        <item name="android:drawablePadding">-10dip</item>
+        <item name="android:layout_marginTop">15dip</item>
+        <item name="android:layout_marginBottom">15dip</item>
+    </style>
     
 </resources>

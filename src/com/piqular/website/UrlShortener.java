@@ -8,12 +8,14 @@ import org.apache.http.ParseException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 
-import com.piqular.R;
-
 import android.app.Activity;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
+import android.widget.Button;
 import android.widget.TextView;
+
+import com.piqular.PiqularMainActivity;
+import com.piqular.R;
 
 public class UrlShortener {
 	
@@ -68,18 +70,18 @@ public class UrlShortener {
 
         @Override
         protected void onPostExecute(HttpResponse result) {
-            //Do something with result
+            // Display URL and buttons
             if (result != null) {
             	HttpEntity entity = result.getEntity();
+            	String shortUrl = "";
             	try {
-					String shortUrl = EntityUtils.toString(entity, "UTF-8");
-					TextView tv = (TextView) activity.findViewById(R.id.tinyurl_main);
-					tv.setText(shortUrl);
+					shortUrl = EntityUtils.toString(entity, "UTF-8");
+					((PiqularMainActivity) activity).displayResultUrl(shortUrl);
 				} catch (ParseException e) {
 					e.printStackTrace();
 				} catch (IOException e) {
 					e.printStackTrace();
-				}
+				}            	
             }
         }
     }
