@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
@@ -35,35 +36,30 @@ public class PiqularMainActivity extends ActionBarActivity {
     public static int LINK_DB_REQUEST = 100;
     private static int SELECT_PHOTO_REQUEST = 200;
 
+    private static final String fontPath = "fonts/ABeeZee-Italic.ttf";
 
     protected void onCreate(Bundle savedInstanceState) {
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.activity_main);
 
-	Button connectButton = (Button) findViewById(R.id.connect_db_button);
 	Button selectPicsButton = (Button) findViewById(R.id.select_photos_button);
 	Button createSiteButton = (Button) findViewById(R.id.create_website_button);
 
-	Button testButton = (Button) findViewById(R.id.test_button);
+	//Button testButton = (Button) findViewById(R.id.test_button);
 
 	syncStatus = SYNC_NOT_STARTED;
+
+	TextView txtTransform = (TextView) findViewById(R.id.transform);
+	Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
+	txtTransform.setTypeface(tf);
 
 	if (!UrlShortener.alreadyInit()) UrlShortener.init(this);
 	if (!DbManager.alreadyInit()) DbManager.init(this, getApplicationContext());
 
 	dbManager = DbManager.getInstance();
 
-
-	if (dbManager.isLinked()) {
-	    connectButton.setVisibility(View.INVISIBLE);
-	}
-	else {
-	    connectButton.setOnClickListener(new OnClickListener() {
-		public void onClick(View v) {
-		    onClickLinkToDropbox();
-		}
-	    });
-	}
+	if (!dbManager.isLinked())
+	    dbManager.linkToDropbox();
 
 	selectPicsButton.setOnClickListener(new OnClickListener() {
 	    public void onClick(View v) {
@@ -71,11 +67,11 @@ public class PiqularMainActivity extends ActionBarActivity {
 	    }
 	});
 
-	testButton.setOnClickListener(new OnClickListener() {
-	    public void onClick(View v) {
-		testing();
-	    }        	
-	});
+//	testButton.setOnClickListener(new OnClickListener() {
+//	    public void onClick(View v) {
+//		testing();
+//	    }        	
+//	});
 
 	createSiteButton.setOnClickListener(new OnClickListener() {
 	    public void onClick(View v) {
@@ -88,6 +84,10 @@ public class PiqularMainActivity extends ActionBarActivity {
 
     // displays the result url
     public void displayResultUrl(final String url) {
+	
+	TextView motto_tv = (TextView) findViewById(R.id.transform);
+	motto_tv.setVisibility(View.GONE);
+	
 	TextView tv = (TextView) findViewById(R.id.tinyurl_main);
 	tv.setText(url);
 	
@@ -123,15 +123,6 @@ public class PiqularMainActivity extends ActionBarActivity {
 		startActivity(Intent.createChooser(sendIntent, "Share with your friends!"));		
 	    }
 	});
-    }
-
-    private void onClickLinkToDropbox() {
-	if (!dbManager.isLinked())
-	    dbManager.linkToDropbox();
-	else {
-	    Toast.makeText(getApplicationContext(), "linked with dropbox!", 
-		    Toast.LENGTH_SHORT).show();
-	}
     }
 
     private void onClickStartPhotoSelect() {
