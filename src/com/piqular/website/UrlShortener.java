@@ -9,14 +9,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.util.EntityUtils;
 
 import com.piqular.R;
-import com.piqular.R.id;
 
 import android.app.Activity;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
-import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class UrlShortener {
@@ -38,8 +34,7 @@ public class UrlShortener {
 	}
 	
 	public static boolean alreadyInit() {
-		if (instance != null) return true;
-		return false;
+		return (instance != null);
 	}
 	
 	// run init before calling getInstance

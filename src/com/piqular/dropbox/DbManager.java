@@ -2,21 +2,10 @@ package com.piqular.dropbox;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.ParseException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.net.http.AndroidHttpClient;
-import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.dropbox.sync.android.DbxAccountManager;
 import com.dropbox.sync.android.DbxException;
@@ -24,8 +13,6 @@ import com.dropbox.sync.android.DbxFile;
 import com.dropbox.sync.android.DbxFileSystem;
 import com.dropbox.sync.android.DbxPath;
 import com.piqular.PiqularMainActivity;
-import com.piqular.R;
-
 
 public class DbManager {
 	
@@ -50,8 +37,7 @@ public class DbManager {
 	}
 	
 	public static boolean alreadyInit() {
-		if (instance != null) return true;
-		return false;
+		return (instance != null);
 	}
 	
 	// call init in main activity before calling getInstance()
@@ -111,8 +97,11 @@ public class DbManager {
 		try{
 			for (int i = 1; i <= length; i++) {
 				DbxPath dbPath;
-				if (photos) { dbPath = new DbxPath(DbxPath.ROOT, PhotoDir+getPhotoName(i));} 
-				else { dbPath = new DbxPath(DbxPath.ROOT, AppDir+i+".html");}
+				if (photos) {
+					dbPath = new DbxPath(DbxPath.ROOT, PhotoDir+getPhotoName(i));
+				} else {
+					dbPath = new DbxPath(DbxPath.ROOT, AppDir+i+".html");
+				}
 				if (findOrCreate(dbPath)) {		
 					String url = dbxFs.fetchShareLink(dbPath, false).toString();
 					publicURLs[i-1] = url.replace("www.dropbox.com", "dl.dropboxusercontent.com");
@@ -130,14 +119,14 @@ public class DbManager {
     
     private boolean findOrCreate(DbxPath dbPath) {
     	try {
-			if (dbxFs.exists(dbPath)) return true;
+			if (dbxFs.exists(dbPath))
+				return true;
             DbxFile preFile = dbxFs.create(dbPath);
             preFile.close();
             return true;
 		} catch (DbxException e) {
 			e.printStackTrace();
 		}
-    	
     	return false;
     }
 

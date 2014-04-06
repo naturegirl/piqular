@@ -1,31 +1,16 @@
 package com.piqular.website;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Scanner;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.ParseException;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.util.EntityUtils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
-import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.EditText;
 
-import com.dropbox.sync.android.DbxFile;
-import com.piqular.R;
 import com.piqular.website.UrlShortener;
 import com.piqular.dropbox.DbManager;
 
@@ -90,7 +75,7 @@ public class SiteManager {
             for (int i = 0; i < htmlDocs.length; i++) {
             	Log.w("htmlDocs URLS", htmlDocs[i]);
             }
-            //NEED TO GET SITECREATEACTIVITY
+            
             UrlShortener.getInstance().shorten(htmlDocs[0]);
             int p = 0;
     		try {
@@ -103,19 +88,15 @@ public class SiteManager {
 						Log.w("photo", photos[p]);
 						printPhoto(sb, photos[p], "");
 						p++;
-						if (category != 0) {
-							if (p % QUOTE_IMG_RATIO == 0) {
-								String[] quote = chooseQuote(category-1);
-								printQuote(sb, quote);
-							}
+						if ((category != 0) && (p % QUOTE_IMG_RATIO == 0)) {
+							String[] quote = chooseQuote(category-1);
+							printQuote(sb, quote);
 						}
 					}
 					printFooters(sb, i, max, htmlDocs);
 					DbManager.getInstance().writeFile(sb.toString(), filename);
 				}
     		} catch (Exception e) { e.printStackTrace(); }
-            
-            
             return null;
         }
 
@@ -136,8 +117,10 @@ public class SiteManager {
 				line = line.replace("#INSERT TITLE#", title);
 				line = line.replace("#HOME#", link);
 				if (line.contains("#DESCRIPTION#")) {
-					if (desc == null || desc == "") line = "";
-					else line = line.replace("#DESCRIPTION#", desc);	
+					if (desc == null || desc == "")
+						line = "";
+					else
+						line = line.replace("#DESCRIPTION#", desc);	
 				}
 				sb.append(line+"\n");
 				//Log.w("swifflet", line);
@@ -154,11 +137,11 @@ public class SiteManager {
 				BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 				String line;
 				while ((line = br.readLine()) != null) {
-					if (line.contains("#PREVLINK#")) {
-						if (i != 1) sb.append(line.replace("#PREVLINK#", links[i-2] + "")+"\n");
+					if (line.contains("#PREVLINK#") && (i != 1)) {
+						sb.append(line.replace("#PREVLINK#", links[i-2] + "")+"\n");
 					}
-					else if (line.contains("#NEXTLINK#")) {
-						if (i < max) sb.append(line.replace("#NEXTLINK#", links[i] + "")+"\n");
+					else if (line.contains("#NEXTLINK#") && (i < max)) {
+						sb.append(line.replace("#NEXTLINK#", links[i] + "")+"\n");
 					}
 					else if (line.contains("#PRECURRLINK#")) {
 						if ((i-2) >= 1) {
@@ -210,7 +193,8 @@ public class SiteManager {
 					sb.append(line.replace("#IMG#", img)+"\n");
 				}
 				else if (line.contains("#DETAILS#")) {
-					if (details == null || details == "");
+					if (details == null || details == "")
+						;
 					sb.append(line.replace("#DETAILS#", details)+"\n");
 				}
 				else 
@@ -255,8 +239,10 @@ public class SiteManager {
 					sb.append(line.replace("#QUOTE#", quote[0])+"\n");
 				}
 				else if (line.contains("#CITE#")) {
-					if (quote[1] == "");
-					else sb.append(line.replace("#CITE#", quote[1])+"\n");
+					if (quote[1] == "")
+						;
+					else 
+						sb.append(line.replace("#CITE#", quote[1])+"\n");
 				}
 				else
 					sb.append(line+"\n");
