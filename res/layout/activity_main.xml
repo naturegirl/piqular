@@ -24,14 +24,14 @@
 	        android:id="@+id/select_photos_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:text="Select photos" />
+	        android:text="Step 1: Select photos" />
 
 	    <Button
 	        style="@style/purpleButton"
 	        android:id="@+id/create_website_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:text="Create website" />
+	        android:text="Step 2: Create website" />
 	    	    	    	    	    	    	        
 	    <Button
 	        style="@style/blueButton"
