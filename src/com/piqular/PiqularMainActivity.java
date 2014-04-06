@@ -164,11 +164,7 @@ public class PiqularMainActivity extends ActionBarActivity {
     }
 
     private void testing() {
-	Intent sendIntent = new Intent();
-	sendIntent.setAction(Intent.ACTION_SEND);
-	sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey, check out http://tinyurl.com/me3dc2q");
-	sendIntent.setType("text/plain");
-	startActivity(Intent.createChooser(sendIntent, "Share link to"));
+	DbManager.getInstance().test();
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -66,15 +66,8 @@ public class SiteManager {
 	protected Void doInBackground(Void ... nothing) {
 	    int length = images.length;
 	    int max = (int) Math.ceil((double)length/NUM_IMG_PER_PAGE);
-	    String[] photos = DbManager.getInstance().getPublicURLs(length, true);
-	    Log.w("swifflet", "trying to get photo URLS");
-	    for (int i = 0; i < photos.length; i++) {
-		Log.w("photo URLs", photos[i]);
-	    }
-	    String[] htmlDocs = DbManager.getInstance().getPublicURLs(max, false);
-	    for (int i = 0; i < htmlDocs.length; i++) {
-		Log.w("htmlDocs URLS", htmlDocs[i]);
-	    }
+	    String[] photos = DbManager.getInstance().getPhotoUrls();
+	    String[] htmlDocs = DbManager.getInstance().getPublicURLs(max);
 
 	    UrlShortener.getInstance().shorten(htmlDocs[0]);
 	    int p = 0;

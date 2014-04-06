@@ -2,9 +2,12 @@ package com.piqular.dropbox;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.dropbox.sync.android.DbxAccountManager;
@@ -18,9 +21,6 @@ public class DbManager {
 
     private static DbManager instance = null;
 
-    //private final static String appKey = "g9u2511s94axpyh";
-    //private final static String appSecret = "rdqxnyirkc2rttp";
-
     private final static String appKey = "g9u2511s94axpyh";
     private final static String appSecret = "rdqxnyirkc2rttp";
 
@@ -30,9 +30,12 @@ public class DbManager {
 
     private Context context;
     private Activity activity;
+    
+    private String[] photoUrls;
 
     private DbxAccountManager mDbxAcctMgr;
     private DbxFileSystem dbxFs;
+    
 
     private DbManager(Activity act, Context ctx) {
 	this.context = ctx;
@@ -66,6 +69,10 @@ public class DbManager {
 	    mDbxAcctMgr.startLink(activity, PiqularMainActivity.LINK_DB_REQUEST);
 	}
     }
+    
+    public String[] getPhotoUrls() {
+	return photoUrls;
+    }
 
     public boolean isLinked() {
 	return mDbxAcctMgr.hasLinkedAccount();
@@ -76,6 +83,9 @@ public class DbManager {
 	    return mDbxAcctMgr.getLinkedAccount().getUserId();
 	else
 	    return null;
+    }
+    
+    public void test() {
     }
 
     /* sets up dbxFs, called from the activity after linking the account succeeded */
@@ -95,22 +105,20 @@ public class DbManager {
 
     //CANNOT BE CALLED FROM MAIN UI THREAD UNDER ANY
     //CIRCUMSTANCES!!! THAT WOULD BE TERRIBLE!!!
-    public String[] getPublicURLs(int length, boolean photos) {
+    public String[] getPublicURLs(int length) {
 
 	String[] publicURLs = new String[length];
 	try {
 	    for (int i = 1; i <= length; i++) {
 		DbxPath dbPath;
-		if (photos) {
-		    dbPath = new DbxPath(DbxPath.ROOT, PhotoDir+getPhotoName(i));
-		} else {
-		    dbPath = new DbxPath(DbxPath.ROOT, AppDir+i+".html");
-		}
-		if (findOrCreate(dbPath)) {		
+		dbPath = new DbxPath(DbxPath.ROOT, AppDir+i+".html");
+		if (findOrCreate(dbPath)) {
 		    String url = dbxFs.fetchShareLink(dbPath, false).toString();
 		    publicURLs[i-1] = url.replace("www.dropbox.com", "dl.dropboxusercontent.com");
 		    publicURLs[i-1] = publicURLs[i-1].replaceFirst("https", "http");
 		    Log.w("public url", publicURLs[i-1]);
+		} else {
+		    Log.w("swifflet", "find or create false");
 		}
 	    }
 	} catch (DbxException e) {
@@ -138,38 +146,77 @@ public class DbManager {
     private String getPhotoName(int cnt) {
 	return "img"+cnt+".jpg";
     }
+    
+    
+    // task to fetch shared link and then sync
+    private class SyncTask extends AsyncTask<String[], Void, Integer> {
+	
+	String photoPaths[];
+	@Override
+	protected Integer doInBackground(String[] ... photoPaths) {
+	    Log.w("swifflet", "in DoInBackground");
+	    
+	    this.photoPaths = photoPaths[0];
+	    try {
+		// get the shared URLs before starting to sync
+		int length = photoPaths[0].length;
+		photoUrls = new String[photoPaths[0].length];
+		for (int i = 1; i <= photoPaths[0].length; ++i) {
+		    DbxPath dbPath = new DbxPath(DbxPath.ROOT, PhotoDir+getPhotoName(i));
+		    if (findOrCreate(dbPath)) {
+			String url = dbxFs.fetchShareLink(dbPath, false).toString();
+			photoUrls[i-1] = url.replace("www.dropbox.com", "dl.dropboxusercontent.com");
+			photoUrls[i-1] = photoUrls[i-1].replaceFirst("https", "http");
+			Log.w("photo urls", photoUrls[i-1]);
+		    }
+		}
+	    } catch (DbxException e) { e.printStackTrace(); }
+	    return 0;
+	}
+
+	protected void onPostExecute(Integer result) {
+	    Log.w("swifflet", "in onPostExecute!");
+	    try {
+		int cnt = 1;
+		for (String imgPath : photoPaths) {
+		    String filename = getPhotoName(cnt);
+		    DbxPath dbPath = new DbxPath(DbxPath.ROOT, PhotoDir+filename);
+
+		    DbxFile dbFile;
+		    File imgFile = new File(imgPath);
+
+		    if (dbxFs.exists(dbPath))
+			dbFile = dbxFs.open(dbPath);
+		    else
+			dbFile = dbxFs.create(dbPath);
+		    dbFile.writeFromExistingFile(imgFile, false);
+		    dbFile.close();
+		    cnt++;
+		}		
+	    } catch (DbxException e) { e.printStackTrace(); 
+	    } catch (IOException e) {
+		e.printStackTrace();
+	    }
+	}
+    }
+
 
     /* make sure to call setupFs before */
     public void syncFiles(String photoPaths[]) {
+
 	try {
 	    if (dbxFs == null) {
 		dbxFs = DbxFileSystem.forAccount(mDbxAcctMgr.getLinkedAccount());
 		dbxFs.addSyncStatusListener(new DbxFileSystem.SyncStatusListener() {
 		    @Override
 		    public void onSyncStatusChange(DbxFileSystem fs) {
-			Log.w("swifflet", "sync status change");
+			Log.w("swifflet", "sync Files: sync status change");
 		    }
-		});				
+		});
 	    }
+	} catch (DbxException e) { e.printStackTrace(); }
 
-	    int cnt = 1;		
-	    for (String imgPath : photoPaths) {
-		String filename = getPhotoName(cnt);
-		DbxPath dbPath = new DbxPath(DbxPath.ROOT, PhotoDir+filename);
-
-		DbxFile dbFile;
-		File imgFile = new File(imgPath);
-
-		if (dbxFs.exists(dbPath))
-		    dbFile = dbxFs.open(dbPath);
-		else
-		    dbFile = dbxFs.create(dbPath);
-		dbFile.writeFromExistingFile(imgFile, false);
-		dbFile.close();
-		cnt++;
-	    }
-	} catch (DbxException e) { e.printStackTrace();
-	} catch (IOException e) { e.printStackTrace(); }
+	new SyncTask().execute(photoPaths);
     }
 
     /* write a textfile to dropbox
