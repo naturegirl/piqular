@@ -34,203 +34,203 @@ import com.piqular.photos.GalleryAdapter;
 import com.piqular.photos.PhotoItem;
 
 public class PhotoSelectActivity extends Activity {
-	
-	private GalleryAdapter adapter;
-	private Handler handler;
-	private ImageLoader imageLoader;
-	
-	private OnItemClickListener mItemMulClickListener;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.gallery);
-		
+    private GalleryAdapter adapter;
+    private Handler handler;
+    private ImageLoader imageLoader;
+
+    private OnItemClickListener mItemMulClickListener;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+	super.onCreate(savedInstanceState);
+	setContentView(R.layout.gallery);
+
+	android.app.ActionBar ab = getActionBar();
+	ab.setDisplayHomeAsUpEnabled(true);
+	ab.setTitle("Select photos");
+
+	mItemMulClickListener = new AdapterView.OnItemClickListener() {
+
+	    public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+		adapter.changeSelection(v, position);
 		android.app.ActionBar ab = getActionBar();
-		ab.setDisplayHomeAsUpEnabled(true);
-		ab.setTitle("Select photos");
+		ab.setTitle("Select photos         (" + adapter.getSelectCount() + " selected)");
+	    }
+	};
 
-		mItemMulClickListener = new AdapterView.OnItemClickListener() {
+	Button okButton = (Button) findViewById(R.id.gallery_ok_button);
+	okButton.setOnClickListener(new OnClickListener() {
+	    public void onClick(View v) {
+		okButtonClicked();
+	    }
+	});
 
-			public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-				adapter.changeSelection(v, position);
-				android.app.ActionBar ab = getActionBar();
-				ab.setTitle("Select photos         (" + adapter.getSelectCount() + " selected)");
-			}
-		};
-		
-		Button okButton = (Button) findViewById(R.id.gallery_ok_button);
-        okButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-            	okButtonClicked();
-            }
-        });
+	initImageLoader();
+	init();
 
-        initImageLoader();
-		init();
+	Bundle extras = getIntent().getExtras();
+	if (extras != null) {
+	    String value = extras.getString("key");
+	    Log.w("swifflet", value);
+	}
+    }	
 
-		Bundle extras = getIntent().getExtras();
-		if (extras != null) {
-		    String value = extras.getString("key");
-		    Log.w("swifflet", value);
-		}
-	}	
-	
     private void initImageLoader() {
-        DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-                .cacheOnDisc().imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
-                .bitmapConfig(Bitmap.Config.RGB_565).build();
-        ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(
-                this).defaultDisplayImageOptions(defaultOptions).memoryCache(
-                new WeakMemoryCache());
+	DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+	.cacheOnDisc().imageScaleType(ImageScaleType.EXACTLY_STRETCHED)
+	.bitmapConfig(Bitmap.Config.RGB_565).build();
+	ImageLoaderConfiguration.Builder builder = new ImageLoaderConfiguration.Builder(
+		this).defaultDisplayImageOptions(defaultOptions).memoryCache(
+			new WeakMemoryCache());
 
-        ImageLoaderConfiguration config = builder.build();
-        imageLoader = ImageLoader.getInstance();
-        imageLoader.init(config);
+	ImageLoaderConfiguration config = builder.build();
+	imageLoader = ImageLoader.getInstance();
+	imageLoader.init(config);
     }
-	
+
     private void init() {
-		handler = new Handler();
-		GridView gridGallery = (GridView) findViewById(R.id.gridGallery);
-		gridGallery.setFastScrollEnabled(true);
-		adapter = new GalleryAdapter(getApplicationContext(), imageLoader);
+	handler = new Handler();
+	GridView gridGallery = (GridView) findViewById(R.id.gridGallery);
+	gridGallery.setFastScrollEnabled(true);
+	adapter = new GalleryAdapter(getApplicationContext(), imageLoader);
 
-		findViewById(R.id.llBottomContainer).setVisibility(View.VISIBLE);
-		gridGallery.setOnItemClickListener(mItemMulClickListener);
-		adapter.setMultiplePick(true);
-		
-		gridGallery.setAdapter(adapter);
+	findViewById(R.id.llBottomContainer).setVisibility(View.VISIBLE);
+	gridGallery.setOnItemClickListener(mItemMulClickListener);
+	adapter.setMultiplePick(true);
 
-		new Thread() {
-			public void run() {
-				Looper.prepare();
-				handler.post(new Runnable() {
-					public void run() {
-						adapter.addAll(getGalleryPhotos());
-					}
-				});
-				Looper.loop();
-			};
-		}.start();
+	gridGallery.setAdapter(adapter);
+
+	new Thread() {
+	    public void run() {
+		Looper.prepare();
+		handler.post(new Runnable() {
+		    public void run() {
+			adapter.addAll(getGalleryPhotos());
+		    }
+		});
+		Looper.loop();
+	    };
+	}.start();
     }
-    
+
     /*
      * only show the selected photos in the gridview to let the user confirm
      */
     private void okButtonClicked() {
-    	
-    	android.app.ActionBar ab = getActionBar();
-    	ab.setTitle("Confirm Selection");
-    	ab.setDisplayHomeAsUpEnabled(false);
-    	
-    	setContentView(R.layout.gallery_result);
-    	
-		final ArrayList<PhotoItem> selected = adapter.getSelected();
-		final String[] photoPaths = new String[selected.size()];
-		for (int i = 0; i < photoPaths.length; i++) {
-			photoPaths[i] = selected.get(i).getPath();
-		}
-		
-		GridView resultGridGallery = (GridView) findViewById(R.id.resultGridGallery);
-		final GalleryAdapter resultAdapter = new GalleryAdapter(getApplicationContext(), imageLoader);
-		adapter.setMultiplePick(false);
-		resultGridGallery.setAdapter(resultAdapter);
-		new Thread() {
-			public void run() {
-				Looper.prepare();
-				handler.post(new Runnable() {
-					public void run() {
-						resultAdapter.addAll(selected);
-					}
-				});
-				Looper.loop();
-			};
-		}.start();
-		
-		Button cancelButton = (Button) findViewById(R.id.result_gallery_back_button);
-        cancelButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-            	onCreate(null);
-            }
-        });
-        
-        /* display this dialog when user is not on wifi */
-        String msg = "You're not connected to WiFi. The photo upload might take up lots of bandwidth. Continue anyway?";
-        final AlertDialog alert = new AlertDialog.Builder(this).
-        		setMessage(msg)
-               .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id) {
-               		Intent data = new Intent().putExtra("photo_paths", photoPaths);
-            		setResult(RESULT_OK, data);
-            		finish();
-                   }
-               })
-               .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id) {
-                       
-                   }
-               })
-               .create();
-        
-		
-		Button uploadButton = (Button) findViewById(R.id.result_gallery_ok_button);
-        uploadButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-            	ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            	NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-            	if (!mWifi.isConnected()) {
-        	    	alert.show();
-            	}
-            	else {
-	        		Intent data = new Intent().putExtra("photo_paths", photoPaths);
-	        		setResult(RESULT_OK, data);
-	        		finish();
-            	}
-            }
-        });
-    }
-    
-	private ArrayList<PhotoItem> getGalleryPhotos() {
-		ArrayList<PhotoItem> galleryList = new ArrayList<PhotoItem>();
+	android.app.ActionBar ab = getActionBar();
+	ab.setTitle("Confirm Selection");
+	ab.setDisplayHomeAsUpEnabled(false);
 
-		try {
-			final String[] columns = { MediaStore.Images.Media.DATA,
-					MediaStore.Images.Media._ID };
-			final String orderBy = MediaStore.Images.Media._ID;
+	setContentView(R.layout.gallery_result);
 
-			@SuppressWarnings("deprecation")
-			Cursor imagecursor = managedQuery(
-					MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns,
-					null, null, orderBy);
-			if (imagecursor != null && imagecursor.getCount() > 0) {
-
-				while (imagecursor.moveToNext()) {
-					
-					int dataColumnIndex = imagecursor
-							.getColumnIndex(MediaStore.Images.Media.DATA);
-
-					String sdcardPath = imagecursor.getString(dataColumnIndex);
-					PhotoItem item = new PhotoItem(sdcardPath);
-
-					galleryList.add(item);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-        // show newest photo at beginning of the list
-		Collections.reverse(galleryList);
-        return galleryList;
-	}    
-
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+	final ArrayList<PhotoItem> selected = adapter.getSelected();
+	final String[] photoPaths = new String[selected.size()];
+	for (int i = 0; i < photoPaths.length; i++) {
+	    photoPaths[i] = selected.get(i).getPath();
 	}
+
+	GridView resultGridGallery = (GridView) findViewById(R.id.resultGridGallery);
+	final GalleryAdapter resultAdapter = new GalleryAdapter(getApplicationContext(), imageLoader);
+	adapter.setMultiplePick(false);
+	resultGridGallery.setAdapter(resultAdapter);
+	new Thread() {
+	    public void run() {
+		Looper.prepare();
+		handler.post(new Runnable() {
+		    public void run() {
+			resultAdapter.addAll(selected);
+		    }
+		});
+		Looper.loop();
+	    };
+	}.start();
+
+	Button cancelButton = (Button) findViewById(R.id.result_gallery_back_button);
+	cancelButton.setOnClickListener(new OnClickListener() {
+	    public void onClick(View v) {
+		onCreate(null);
+	    }
+	});
+
+	/* display this dialog when user is not on wifi */
+	String msg = "You're not connected to WiFi. The photo upload might take up lots of bandwidth. Continue anyway?";
+	final AlertDialog alert = new AlertDialog.Builder(this).
+		setMessage(msg)
+		.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int id) {
+			Intent data = new Intent().putExtra("photo_paths", photoPaths);
+			setResult(RESULT_OK, data);
+			finish();
+		    }
+		})
+		.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+		    public void onClick(DialogInterface dialog, int id) {
+
+		    }
+		})
+		.create();
+
+
+	Button uploadButton = (Button) findViewById(R.id.result_gallery_ok_button);
+	uploadButton.setOnClickListener(new OnClickListener() {
+	    public void onClick(View v) {
+		ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+		if (!mWifi.isConnected()) {
+		    alert.show();
+		}
+		else {
+		    Intent data = new Intent().putExtra("photo_paths", photoPaths);
+		    setResult(RESULT_OK, data);
+		    finish();
+		}
+	    }
+	});
+    }
+
+    private ArrayList<PhotoItem> getGalleryPhotos() {
+	ArrayList<PhotoItem> galleryList = new ArrayList<PhotoItem>();
+
+	try {
+	    final String[] columns = { MediaStore.Images.Media.DATA,
+		    MediaStore.Images.Media._ID };
+	    final String orderBy = MediaStore.Images.Media._ID;
+
+	    @SuppressWarnings("deprecation")
+	    Cursor imagecursor = managedQuery(
+		    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns,
+		    null, null, orderBy);
+	    if (imagecursor != null && imagecursor.getCount() > 0) {
+
+		while (imagecursor.moveToNext()) {
+
+		    int dataColumnIndex = imagecursor
+			    .getColumnIndex(MediaStore.Images.Media.DATA);
+
+		    String sdcardPath = imagecursor.getString(dataColumnIndex);
+		    PhotoItem item = new PhotoItem(sdcardPath);
+
+		    galleryList.add(item);
+		}
+	    }
+	} catch (Exception e) {
+	    e.printStackTrace();
+	}
+
+	// show newest photo at beginning of the list
+	Collections.reverse(galleryList);
+	return galleryList;
+    }    
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) {
+	// TODO Auto-generated method stub
+
+    }
 
 }

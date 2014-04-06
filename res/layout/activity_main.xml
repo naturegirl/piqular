@@ -27,7 +27,7 @@
 	        android:text="Step 1: Select photos" />
 
 	    <Button
-	        style="@style/purpleButton"
+	        style="@style/blueButton"
 	        android:id="@+id/create_website_button"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
@@ -50,6 +50,7 @@
             android:gravity="center"
             android:textSize="20sp"
             android:autoLink="web"
+            android:text="http://tinyurl.com/kmh9fjm"
             />
         <LinearLayout
 	        android:id="@+id/llBottomContainer"
@@ -68,7 +69,7 @@
 		        android:drawableLeft="@drawable/ic_action_copy"
 		        android:text="copy"
 		        android:layout_marginRight="20dip"
-		        android:visibility="invisible"
+		        
 		        />
 
 			<Button
@@ -78,7 +79,7 @@
 		        android:layout_height="wrap_content"
 		        android:drawableLeft="@drawable/ic_action_share"
 		        android:text="share"
-		        android:visibility="invisible"
+		        
 		        />
 		</LinearLayout>
 	    	    
