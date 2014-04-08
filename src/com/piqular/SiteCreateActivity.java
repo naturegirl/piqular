@@ -1,8 +1,5 @@
 package com.piqular;
 
-import com.piqular.dropbox.DbManager;
-import com.piqular.website.SiteManager;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -16,6 +13,10 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.piqular.dropbox.DbManager;
+import com.piqular.website.SiteManager;
+import com.piqular.website.UrlShortener;
 
 public class SiteCreateActivity extends Activity {
 
@@ -85,9 +86,9 @@ public class SiteCreateActivity extends Activity {
 	    sm.initSiteInfo(this, getApplicationContext(), title, desc, quoteType, fullUrls);
 	    sm.generate();
 
-	    //String uid = DbManager.getInstance().getUid();
-	    //String longUrl = "http://dl.dropboxusercontent.com/u/" + uid + "/" + DbManager.AppDir + "1.html";
-	    //UrlShortener.getInstance(this).shorten(longUrl);
+	    String uid = DbManager.getInstance().getUid();
+	    String longUrl = "http://dl.dropboxusercontent.com/u/" + uid + "/" + DbManager.AppDir + "1.html";
+	    UrlShortener.getInstance().shorten(longUrl);
 
 
 	    Log.w("attributes", title);
