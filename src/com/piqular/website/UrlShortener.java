@@ -11,6 +11,7 @@ import org.apache.http.util.EntityUtils;
 import android.app.Activity;
 import android.net.http.AndroidHttpClient;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -77,10 +78,15 @@ public class UrlShortener {
 		try {
 		    shortUrl = EntityUtils.toString(entity, "UTF-8");
 		    ((PiqularMainActivity) activity).displayResultUrl(shortUrl);
+			Log.w("url back to on post exec", shortUrl);
 		} catch (ParseException e) {
 		    e.printStackTrace();
+			Log.w("url parse exception", ":( parsing exception");
 		} catch (IOException e) {
-		    e.printStackTrace();
+			if (shortUrl == null || shortUrl == "") {
+				Log.w("io exception url", ":( io exception");
+			    e.printStackTrace();
+			}
 		}            	
 	    }
 	}

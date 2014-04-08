@@ -89,12 +89,14 @@ public class PiqularMainActivity extends ActionBarActivity {
 	motto_tv.setVisibility(View.GONE);
 	
 	TextView tv = (TextView) findViewById(R.id.tinyurl_main);
+	Log.w("urlpreset text", url);
 	tv.setText(url);
-	
+	Log.w("urlpostset text", url);
 	Button copyButton = (Button) findViewById(R.id.copyButton);
 	Button shareButton = (Button) findViewById(R.id.shareButton);
 	copyButton.setVisibility(View.VISIBLE);
 	shareButton.setVisibility(View.VISIBLE);
+	Log.w("urlpreset buttons", url);
 	copyButton.setOnClickListener(new OnClickListener() {
 	    public void onClick(View v) {
 		ClipboardManager cm = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
@@ -104,6 +106,7 @@ public class PiqularMainActivity extends ActionBarActivity {
 		Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();		    	
 	    }
 	});
+	Log.w("urlpostset button clipboard", url);
 	shareButton.setOnClickListener(new OnClickListener() {
 	    public void onClick(View v) {
 		Intent sendIntent = new Intent();
@@ -123,6 +126,7 @@ public class PiqularMainActivity extends ActionBarActivity {
 		startActivity(Intent.createChooser(sendIntent, "Share with your friends!"));		
 	    }
 	});
+	Log.w("urlpostset button share", url);
     }
 
     private void onClickStartPhotoSelect() {
